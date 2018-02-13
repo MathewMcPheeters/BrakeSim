@@ -10,13 +10,23 @@ import javafx.stage.Stage;
 
 public class Main extends Application
 {
+
   private void initializeDashboard(VBox dashboard)
   {
-    HBox speed = new HBox(10);
+    HBox speed = new HBox(5);
     Label speedLabel = new Label("Speed:");
     TextField speedInput = new TextField();
+    speedInput.setPrefColumnCount(5);
     Button enterSpeed = new Button("Enter");
     speed.getChildren().addAll(speedLabel,speedInput,enterSpeed);
+
+    HBox acceleration = new HBox(5);
+    Label accelerationLabel = new Label("Acceleration:");
+    TextField accelerationInput = new TextField();
+    accelerationInput.setPrefColumnCount(5);
+    Button enterAcceleration = new Button("Enter");
+    acceleration.getChildren().addAll(accelerationLabel,accelerationInput,enterAcceleration);
+
 
     HBox gear = new HBox(10);
     Label gearLabel = new Label("Gear:");
@@ -37,7 +47,7 @@ public class Main extends Application
     Button stop = new Button("Stop");
     Button reset = new Button("Reset");
     simulationControl.getChildren().addAll(start,stop,reset);
-    dashboard.getChildren().addAll(speed,gear,simulationControl);
+    dashboard.getChildren().addAll(speed,acceleration,gear,simulationControl);
   }
 
   @Override
