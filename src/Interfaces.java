@@ -39,7 +39,7 @@ public class Interfaces
     }
     else
     {
-      this.currentSpeed = newSpeed
+      this.currentSpeed = newSpeed;
     }
   }
   public int getCurrentSpeed()
