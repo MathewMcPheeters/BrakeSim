@@ -13,7 +13,8 @@ public class Main extends Application
     {
         BorderPane root = new BorderPane();
         root.setPrefSize(900,500);
-        Dashboard dashboard = new Dashboard(10);
+        SimulationWorker simulationWorker = new SimulationWorker();
+        Dashboard dashboard = new Dashboard(10,simulationWorker);
         dashboard.setAlignment(Pos.CENTER);
         dashboard.setPadding(new Insets(10,10,10,10));
         SimulationArea simulationArea = new SimulationArea();

@@ -44,6 +44,11 @@ public class Car
         theta_C = newTheta_C;
     }
 
+    public Car()
+    {
+      EBS brakeSystem = new EBS();
+    }
+
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition(){
         double x_R = x_C - s_x*cos(theta_C) + s_y*sin(theta_C);
