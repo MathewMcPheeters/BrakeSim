@@ -15,6 +15,7 @@ public class Car
     private static double theta_C = 0.0; // car frame's angle of rotation (radians)
     private static double v_xC = 0.0; // x-velocity of car's center of mass (m/s)
     private static double v_yC = 0.0; // y-velocity of car's center of mass (m/s)
+    private static double acceleration = 0.0;
     private static double w_C = 0.0; // rate of rotation of car frame (radians/s)
     private static double m_C = 100; // mass of frame (kg)
 
@@ -42,6 +43,14 @@ public class Car
     }
     public static void setTheta_C(double newTheta_C){
         theta_C = newTheta_C;
+    }
+    public static void setV_xC(double newV_xC)
+    {
+        v_xC = newV_xC;
+    }
+    public static void setAcceleration(double newAcceleration)
+    {
+        acceleration = newAcceleration;
     }
 
     public Car()

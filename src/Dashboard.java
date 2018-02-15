@@ -27,8 +27,9 @@ public class Dashboard extends VBox {
               if(speedText.equals("")) return;
               try
               {
-                int speed = Integer.parseInt(speedText);
-                System.out.println(speed);
+                double speed = Double.parseDouble(speedText);
+                Car.setV_xC(speed);
+                System.out.println("Speed is " + speed);
               }
               catch(NumberFormatException e)
               {
@@ -36,14 +37,35 @@ public class Dashboard extends VBox {
               }
             }
         });
-        speed.getChildren().addAll(speedLabel,speedInput,enterSpeed);
+        Label milesPerHour = new Label("mi/hr");
+        speed.getChildren().addAll(speedLabel,speedInput,milesPerHour,enterSpeed);
 
         HBox acceleration = new HBox(5);
         Label accelerationLabel = new Label("Acceleration:");
         TextField accelerationInput = new TextField();
         accelerationInput.setPrefColumnCount(5);
         Button enterAcceleration = new Button("Enter");
-        acceleration.getChildren().addAll(accelerationLabel,accelerationInput,enterAcceleration);
+        enterAcceleration.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                String accelerationText = accelerationInput.getText();
+                if(accelerationText.equals("")) return;
+                try
+                {
+                    double acceleration = Double.parseDouble(accelerationText);
+                    Car.setAcceleration(acceleration);
+                    System.out.println("Acceleration is: "+acceleration);
+                }
+                catch(NumberFormatException e)
+                {
+                    System.out.println("Invalid input acceleration");
+                }
+            }
+        });
+        Label milesPerHourSquared = new Label("mi/hr^2");
+        acceleration.getChildren().addAll(accelerationLabel,accelerationInput,milesPerHourSquared,enterAcceleration);
 
         HBox gear = new HBox(10);
         Label gearLabel = new Label("Gear:");
@@ -62,10 +84,30 @@ public class Dashboard extends VBox {
         simulationControl.setAlignment(Pos.CENTER_LEFT);
         Button start = new Button("Start");
         start.setOnAction((event -> {
-            System.out.println("start button pressed!");
+            if(!simulationWorker.isAlive())
+            {
+              simulationWorker.start();
+            }
         }));
         Button stop = new Button("Stop");
+        stop.setOnAction((event -> {
+            if(simulationWorker.isAlive())
+            {
+                simulationWorker.setRunning(false);
+                simulationWorker.setTerminate(true);
+            }
+        }));
         Button reset = new Button("Reset");
+        reset.setOnAction((event) ->
+        {
+            if(simulationWorker.isAlive())
+            {
+                simulationWorker.setRunning(false);
+                simulationWorker.setTerminate(true);
+            }
+            Car.setX_C(0);
+            Car.setY_C(0);
+        });
         simulationControl.getChildren().addAll(start,stop,reset);
         getChildren().addAll(speed,acceleration,gear,simulationControl);
     }

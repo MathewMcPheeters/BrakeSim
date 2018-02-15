@@ -5,6 +5,14 @@ public class SimulationWorker extends Thread
 {
   private boolean terminate = false;
   private boolean running = false;
+  public void setTerminate(boolean b)
+  {
+    terminate = b;
+  }
+  public void setRunning(boolean b)
+  {
+    running = b;
+  }
   @Override
   public void run()
   {
