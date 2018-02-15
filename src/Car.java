@@ -52,6 +52,14 @@ public class Car
     {
         acceleration = newAcceleration;
     }
+    public static Double getAcceleration()
+    {
+        return acceleration;
+    }
+    public static Double getXVelocity()
+    {
+        return v_xC;
+    }
 
     public Car()
     {
