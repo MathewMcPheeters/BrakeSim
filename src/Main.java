@@ -14,13 +14,19 @@ public class Main extends Application
   {
     BorderPane root = new BorderPane();
     root.setPrefSize(900,500);
+
+    SimulationArea simulationArea = new SimulationArea();
+
     SimulationWorker simulationWorker = new SimulationWorker();
+    simulationWorker.setSimulationArea(simulationArea); //Set the simulation area for the worker
+
     Dashboard dashboard = new Dashboard(10,simulationWorker);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(10,10,10,10));
-    SimulationArea simulationArea = new SimulationArea();
-    root.setLeft(dashboard);
+
     root.setCenter(simulationArea);
+    root.setLeft(dashboard);
+
     Scene scene = new Scene(root);
     primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>()
     {
