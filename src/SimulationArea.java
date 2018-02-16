@@ -1,4 +1,7 @@
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -52,7 +55,12 @@ public class SimulationArea extends Pane {
         int numberOfInitialDashes = AREALENGTH/DASHDISTANCEAPART;
 
         for(int i=560; i > 0; i-=150){
-            createRoadDash(i, 300);
+            int transitionDuration = calculateAnimationDuration(i);
+
+            RoadDash newDash = new RoadDash(i,300,transitionDuration);
+
+            this.getChildren().add(newDash.shape);
+            roadDashes.add(0,newDash);
         }
     }
 
@@ -84,11 +92,21 @@ public class SimulationArea extends Pane {
     }
 
     /**Takes the current speed and calculates how quickly new road dashes should be created.
+     * Returns a time in milliseconds
      */
     private int calculateDashCreationInterval(){
 
-
+        
         return 0;
+    }
+
+    /**
+     * Removes the oldest dash from the scene.
+     */
+    private void removeOldestDash(){
+        RoadDash targetDash = roadDashes.get(0);
+        this.getChildren().remove(targetDash.shape);
+        roadDashes.remove(0);
     }
 
     /**
@@ -106,6 +124,12 @@ public class SimulationArea extends Pane {
             this.shape.setFill(Color.WHITE);
             this.transition = new TranslateTransition(Duration.millis(transitionDuration), shape);
             this.transition.setByX(-1*x);
+            this.transition.setOnFinished(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent event) {
+                    removeOldestDash(); //Works on the assumption that the oldest dash will be the next to finish
+                }
+            });
         }
     }
 
