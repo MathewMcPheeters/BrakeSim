@@ -47,6 +47,8 @@ public class SimulationWorker extends Thread
     long currentTime = System.currentTimeMillis();
     long deltaTime = currentTime - lastTick;
 
+    simulationArea.updateAnimations();
+
     if(deltaTime >= tickInterval){
       lastTick = currentTime;
       simulationTimeElapsed ++;
@@ -54,15 +56,17 @@ public class SimulationWorker extends Thread
     }
 
     //Start animations at the beginning of the simulation
-    if(simulationTimeElapsed == 1){
-        simulationArea.startAnimations();
+    if(simulationTimeElapsed == 0){
         simulationArea.animationsPlaying = true;
+        simulationArea.startAnimations();
     }
-
-
   }
 
   public void setSimulationArea(SimulationArea area){
     simulationArea = area;
+  }
+
+  public SimulationArea getSimulationArea(){
+        return simulationArea;
   }
 }
