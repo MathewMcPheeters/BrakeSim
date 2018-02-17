@@ -70,11 +70,7 @@ public class Car
     {
         return acceleration;
     }
-    public static Double getXVelocity()
-    {
-        return v_xC;
-    }
-
+    public static Double getXVelocity(){return v_xC;}
     public static Gear getGear()
     {
         return gear;

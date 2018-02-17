@@ -1,3 +1,6 @@
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -15,6 +18,10 @@ public class Dashboard extends VBox
   public Dashboard(double spacing, SimulationWorker simulationWorker)
   {
     super(spacing);
+    Label speedDisplay = new Label("Current Speed: "+ Car.getXVelocity());
+    speedDisplay.setAlignment(Pos.CENTER_LEFT);
+    Label accelerationDisplay = new Label("Current Acceleration: "+Car.getAcceleration());
+    accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
     HBox speed = new HBox(5);
     Label speedLabel = new Label("Speed:");
     TextField speedInput = new TextField();
@@ -143,6 +150,7 @@ public class Dashboard extends VBox
       Car.setY_C(0);
     });
     simulationControl.getChildren().addAll(start,stop,reset);
-    getChildren().addAll(speed,acceleration,gear,simulationControl);
+    getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
+
   }
 }
