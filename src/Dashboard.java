@@ -78,9 +78,25 @@ public class Dashboard extends VBox
     RadioButton neutral = new RadioButton("Neutral");
     RadioButton drive = new RadioButton("Drive");
     park.setToggleGroup(toggleGroup);
+    park.setOnAction((event ->
+    {
+      Car.setGear(Gear.PARK);
+    }));
     reverse.setToggleGroup(toggleGroup);
+    reverse.setOnAction((event ->
+    {
+      Car.setGear(Gear.REVERSE);
+    }));
     neutral.setToggleGroup(toggleGroup);
+    neutral.setOnAction((event ->
+    {
+      Car.setGear(Gear.NEUTRAL);
+    }));
     drive.setToggleGroup(toggleGroup);
+    drive.setOnAction((event ->
+    {
+      Car.setGear(Gear.DRIVE);
+    }));
     gear.getChildren().addAll(gearLabel,park,reverse,neutral,drive);
 
     HBox simulationControl = new HBox(10);
@@ -88,6 +104,11 @@ public class Dashboard extends VBox
     Button start = new Button("Start");
     start.setOnAction((event ->
     {
+      if(Car.getGear() == null)
+      {
+        new ErrorDialog(Alert.AlertType.ERROR,"Please Select a gear for the car");
+        return;
+      }
       if(Car.getAcceleration() != 0 || Car.getXVelocity() != 0)
       {
         if (!simulationWorker.isAlive())

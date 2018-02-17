@@ -75,6 +75,11 @@ public class Car
         return v_xC;
     }
 
+    public static Gear getGear()
+    {
+        return gear;
+    }
+
     public Car()
     {
         EBS brakeSystem = new EBS();
