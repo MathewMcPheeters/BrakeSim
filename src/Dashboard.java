@@ -31,6 +31,15 @@ public class Dashboard extends VBox
     });
     Label accelerationDisplay = new Label("Current Acceleration: "+Car.getAcceleration());
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
+    Car.getAccelerationChange().addListener(new ChangeListener<Boolean>()
+    {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+      {
+        accelerationDisplay.setText("Current Acceleration: "+ Car.getAcceleration());
+        Car.getVelocityChange().set(false);
+      }
+    });
     HBox speed = new HBox(5);
     Label speedLabel = new Label("Speed:");
     TextField speedInput = new TextField();

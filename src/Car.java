@@ -43,6 +43,7 @@ public class Car
 
     private static double acceleration = 0.0;
     private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
+    private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
     // Variables regarding the environment
     private static double T = 10.0; // torque applied by the brakes
 
@@ -68,6 +69,7 @@ public class Car
     public static void setAcceleration(double newAcceleration)
     {
         acceleration = newAcceleration;
+        accelerationChange.setValue(true);
     }
     public static Double getAcceleration()
     {
@@ -81,6 +83,10 @@ public class Car
     public static SimpleBooleanProperty getVelocityChange()
     {
         return velocityChange;
+    }
+    public static SimpleBooleanProperty getAccelerationChange()
+    {
+        return accelerationChange;
     }
 
     public Car()
