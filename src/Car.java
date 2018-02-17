@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
 
 import static java.lang.Math.cos;
@@ -41,7 +42,7 @@ public class Car
     private static double w_C = 0.0; // rate of rotation of car frame (radians/s)
 
     private static double acceleration = 0.0;
-
+    private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
     // Variables regarding the environment
     private static double T = 10.0; // torque applied by the brakes
 
@@ -61,6 +62,8 @@ public class Car
     public static void setV_xC(double newV_xC)
     {
         v_xC = newV_xC;
+        velocityChange.setValue(true);
+        System.out.println("Velocity Changed");
     }
     public static void setAcceleration(double newAcceleration)
     {
@@ -74,6 +77,10 @@ public class Car
     public static Gear getGear()
     {
         return gear;
+    }
+    public static SimpleBooleanProperty getVelocityChange()
+    {
+        return velocityChange;
     }
 
     public Car()

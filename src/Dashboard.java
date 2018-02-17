@@ -20,6 +20,15 @@ public class Dashboard extends VBox
     super(spacing);
     Label speedDisplay = new Label("Current Speed: "+ Car.getXVelocity());
     speedDisplay.setAlignment(Pos.CENTER_LEFT);
+    Car.getVelocityChange().addListener(new ChangeListener<Boolean>()
+    {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+      {
+        speedDisplay.setText("Current Speed: "+ Car.getXVelocity());
+        Car.getVelocityChange().set(false);
+      }
+    });
     Label accelerationDisplay = new Label("Current Acceleration: "+Car.getAcceleration());
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
     HBox speed = new HBox(5);
@@ -150,6 +159,7 @@ public class Dashboard extends VBox
       Car.setY_C(0);
     });
     simulationControl.getChildren().addAll(start,stop,reset);
+    simulationControl.setAlignment(Pos.CENTER);
     getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
 
   }
