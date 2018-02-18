@@ -1,4 +1,3 @@
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -66,6 +65,7 @@ public class Dashboard extends VBox
       }
     });
     Label milesPerHour = new Label("mi/hr");
+    speed.setAlignment(Pos.CENTER);
     speed.getChildren().addAll(speedLabel,speedInput,milesPerHour,enterSpeed);
 
     HBox acceleration = new HBox(5);
@@ -93,6 +93,7 @@ public class Dashboard extends VBox
       }
     });
     Label milesPerHourSquared = new Label("mi/hr^2");
+    acceleration.setAlignment(Pos.CENTER);
     acceleration.getChildren().addAll(accelerationLabel,accelerationInput,milesPerHourSquared,enterAcceleration);
 
     HBox gear = new HBox(10);
@@ -153,7 +154,7 @@ public class Dashboard extends VBox
       if(simulationWorker.isAlive())
       {
         simulationWorker.setRunning(false);
-        simulationWorker.setTerminate(true);
+        simulationWorker.terminate();
       }
     }));
     Button reset = new Button("Reset");
@@ -162,14 +163,26 @@ public class Dashboard extends VBox
       if(simulationWorker.isAlive())
       {
         simulationWorker.setRunning(false);
-        simulationWorker.setTerminate(true);
+        simulationWorker.terminate();
       }
       Car.setX_C(0);
       Car.setY_C(0);
     });
-    simulationControl.getChildren().addAll(start,stop,reset);
+    Button brake = new Button("Brake");
+    brake.setOnAction((event) ->
+    {
+      if(simulationWorker.isAlive())
+      {
+        Car.getBrakeSystem().triggerBrake();
+      }
+      else
+      {
+        String message = "Error: Simulation is not running";
+        new ErrorDialog(Alert.AlertType.ERROR,message);
+      }
+    });
+    simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
     getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
-
   }
 }

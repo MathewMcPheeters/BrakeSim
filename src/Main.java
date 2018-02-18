@@ -34,8 +34,15 @@ public class Main extends Application
       public void handle(WindowEvent event)
       {
         simulationWorker.setRunning(false);
-        simulationWorker.setTerminate(true);
+        simulationWorker.terminate();
         while(simulationWorker.isAlive()){}
+        if(Car.getBrakeSystem() != null)
+        {
+          System.out.println("We entered this block of code");
+          Car.getBrakeSystem().setRunning(false);
+          Car.getBrakeSystem().terminate();
+          while(Car.getBrakeSystem().isAlive()){}
+        }
       }
     });
     primaryStage.setScene(scene);

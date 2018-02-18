@@ -9,10 +9,21 @@ public class EBS extends Thread
     private boolean terminate = false;
     private boolean running = false;
     private SimpleBooleanProperty trigger;
-
+    public void triggerBrake()
+    {
+      trigger.set(true);
+    }
+    public void terminate()
+    {
+      terminate = true;
+    }
+    public void setRunning(boolean run)
+    {
+      running = run;
+    }
     public EBS()
     {
-        trigger.setValue(true);
+        trigger = new SimpleBooleanProperty(false);
     }
     @Override
     public void run()
@@ -21,7 +32,10 @@ public class EBS extends Thread
         {
             while(running)
             {
-
+                if(trigger.get())
+                {
+                  //Braking policy goes here
+                }
             }
             try
             {

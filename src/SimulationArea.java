@@ -58,14 +58,15 @@ public class SimulationArea extends Pane {
     public void updateAnimations(){
 
         if(animationsPlaying){
-
+            System.out.println("Counter 1.....");
             double currentTime = System.currentTimeMillis();
             double deltaTime = currentTime - lastTick;
-
+            System.out.println("Counter 2.....");
             if(deltaTime >= dashCreationInterval){
                 lastTick = currentTime;
                 createRoadDash(560,300);
             }
+            System.out.println("Counter 3.....");
         }
     }
 
@@ -115,7 +116,7 @@ public class SimulationArea extends Pane {
         RoadDash newDash = new RoadDash(x,y,transitionDuration);
 
         roadDashes.add(newDash);
-
+        System.out.println(roadDashes.size());
         //Kind of hacky solution to update UI on JavaFX thread. If it is not done this way, throws an exception
         Pane context = this;
         Platform.runLater(new Runnable() {
@@ -137,7 +138,6 @@ public class SimulationArea extends Pane {
     private int calculateAnimationDuration(int x){
 
         double feetToTraverse = x/PIXELSTOFEET;
-
         double feetPerSecond = currentSpeed * MPHTOFPS;
         double millisecondsToTraverseArea = (feetToTraverse/feetPerSecond)*1000;
 

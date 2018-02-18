@@ -10,9 +10,9 @@ public class SimulationWorker extends Thread
   private long lastTick = 0;
   private boolean terminate = false;
   private boolean running = true;
-  public void setTerminate(boolean b)
+  public void terminate()
   {
-    terminate = b;
+    terminate = true;
   }
   public void setRunning(boolean b)
   {
@@ -22,8 +22,9 @@ public class SimulationWorker extends Thread
   @Override
   public void run()
   {
+    Car.setEBSSystem(new EBS());
+    Car.getBrakeSystem().start();
     lastTick = System.currentTimeMillis();
-
     while(!terminate)
     {
       while(running)
@@ -33,7 +34,6 @@ public class SimulationWorker extends Thread
       try
       {
         Thread.sleep(500);
-
       }
       catch(InterruptedException e)
       {
@@ -46,10 +46,10 @@ public class SimulationWorker extends Thread
 
     long currentTime = System.currentTimeMillis();
     long deltaTime = currentTime - lastTick;
-
     simulationArea.updateAnimations();
 
     if(deltaTime >= tickInterval){
+      //simulationArea.updateAnimations();
       lastTick = currentTime;
       simulationTimeElapsed ++;
       System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);

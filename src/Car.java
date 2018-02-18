@@ -64,7 +64,6 @@ public class Car
     {
         v_xC = newV_xC;
         velocityChange.setValue(true);
-        System.out.println("Velocity Changed");
     }
     public static void setAcceleration(double newAcceleration)
     {
@@ -88,10 +87,13 @@ public class Car
     {
         return accelerationChange;
     }
+    private static EBS brakeSystem;
+    public static void setEBSSystem(EBS system){brakeSystem = system;}
+    public static EBS getBrakeSystem(){return brakeSystem;}
 
     public Car()
     {
-        EBS brakeSystem = new EBS();
+        brakeSystem.start();
     }
 
     /** returns the position of the rear wheel */
