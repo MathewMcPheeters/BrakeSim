@@ -58,15 +58,12 @@ public class SimulationArea extends Pane {
     public void updateAnimations(){
 
         if(animationsPlaying){
-            System.out.println("Counter 1.....");
             double currentTime = System.currentTimeMillis();
             double deltaTime = currentTime - lastTick;
-            System.out.println("Counter 2.....");
             if(deltaTime >= dashCreationInterval){
                 lastTick = currentTime;
                 createRoadDash(560,300);
             }
-            System.out.println("Counter 3.....");
         }
     }
 

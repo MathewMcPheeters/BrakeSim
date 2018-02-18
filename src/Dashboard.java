@@ -1,5 +1,6 @@
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -14,6 +15,10 @@ import javafx.scene.layout.VBox;
 public class Dashboard extends VBox
 {
 
+  private void resetSimulationWorker(SimulationWorker worker)
+  {
+    worker = new SimulationWorker();
+  }
   public Dashboard(double spacing, SimulationWorker simulationWorker)
   {
     super(spacing);
@@ -141,6 +146,10 @@ public class Dashboard extends VBox
         {
           simulationWorker.start();
         }
+        else
+        {
+          simulationWorker.setRunning(true);
+        }
       }
       else
       {
@@ -148,13 +157,13 @@ public class Dashboard extends VBox
         ErrorDialog error = new ErrorDialog(Alert.AlertType.ERROR,message);
       }
     }));
+
     Button stop = new Button("Stop");
     stop.setOnAction((event ->
     {
       if(simulationWorker.isAlive())
       {
         simulationWorker.setRunning(false);
-        simulationWorker.terminate();
       }
     }));
     Button reset = new Button("Reset");

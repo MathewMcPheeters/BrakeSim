@@ -38,7 +38,6 @@ public class Main extends Application
         while(simulationWorker.isAlive()){}
         if(Car.getBrakeSystem() != null)
         {
-          System.out.println("We entered this block of code");
           Car.getBrakeSystem().setRunning(false);
           Car.getBrakeSystem().terminate();
           while(Car.getBrakeSystem().isAlive()){}
