@@ -25,7 +25,7 @@ public class Car
     private static double d = 4; // distance between the wheels (m)
     private static double s_x = 2; // x-distance between rear wheel and frame's center of mass (m)
     private static double s_y = 0.2; // y-distance between wheels and frame's center of mass (m)
-    private static double k = 1.0; // The spring coefficient of the car's suspension system (N/m)
+    private static double k = 50000.0; // The spring coefficient of the car's suspension system (N/m)
     private static double h = 1.0; // The dampening coefficient of the car's suspension system (N-s/m)
 
     // Constants regarding the environment
@@ -35,7 +35,7 @@ public class Car
 
     // Variables regarding the position and velocity of the car.
     private static double x_C = 5; // x-position of car's center of mass (m)
-    private static double y_C = 0.5; // y-position of car's center of mass (m)
+    private static double y_C = 0.49; // y-position of car's center of mass (m)
     private static double theta_C = 0.0; // car frame's angle of rotation (radians)
     private static double v_xC = 10.0; // x-velocity of car's center of mass (m/s)
     private static double v_yC = 0.0; // y-velocity of car's center of mass (m/s)
@@ -45,7 +45,7 @@ public class Car
     private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
     private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
     // Variables regarding the environment
-    private static double T = 10.0; // torque applied by the brakes
+    private static double T = -500.0; // torque applied by the brakes
 
     // Setters
     public static void setGear(Gear newGear){
@@ -97,7 +97,7 @@ public class Car
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition(){
         double x_R = x_C - s_x*cos(theta_C) + s_y*sin(theta_C);
-        double y_R = y_C - s_x*sin(theta_C) + s_y*cos(theta_C);
+        double y_R = y_C - s_x*sin(theta_C) - s_y*cos(theta_C);
         return new Point2D(x_R, y_R);
     }
 
@@ -113,12 +113,12 @@ public class Car
      * compute the instantaneous rate of rotational acceleration of the car frame, as a function of the current values
      * of y_C, v_yC, theta_C and w_C.
      */
-    public static double getCurrentThetaAcceleration(double y_C, double v_yC, double theta_C, double w_C){
-        double numerator = (d-2*s_x)*(k*(R-y_C+s_x*sin(theta_C)-s_y*cos(theta_C))-h*(v_yC-s_x*cos(theta_C)*w_C-s_y*sin(theta_C)*w_C)) + m_F*(d-s_x)*(d*sin(theta_C)*w_C*w_C) + s_y*(I_zzF/(R*R)-m_F)*(d*cos(theta_C)*w_C*w_C) -s_y*T/R
-                -(m_F*(d-s_x)-2*s_x*m_R)*(g+s_x*sin(theta_C)*w_C*w_C-s_y*cos(theta_C)*w_C*w_C+(2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)-s_y*cos(theta_C))-(2*h/(m_C+m_R+m_F))*(v_yC-(s_x+d/2)*cos(theta_C)*w_C-s_y*sin(theta_C)*w_C)-((m_R+m_F)/(m_C+m_R+m_F))*(g+((s_x-m_F*d/(m_R+m_F))*sin(theta_C)-s_y*cos(theta_C))*w_C*w_C)-m_C*g/(m_C+m_R+m_F))
+    public static double getCurrentThetaAcceleration(){
+        double numerator = (d-2*s_x)*(k*(R-y_C+s_x*sin(theta_C)+s_y*cos(theta_C))-h*(v_yC-s_x*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C)) + m_F*(d-s_x)*(d*sin(theta_C)*w_C*w_C) + s_y*(I_zzF/(R*R)-m_F)*(d*cos(theta_C)*w_C*w_C) -s_y*T/R
+                -(m_F*(d-s_x)-s_x*m_R)*(g+s_x*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*w_C*w_C+(2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)+s_y*cos(theta_C))-(2*h/(m_C+m_R+m_F))*(v_yC-(s_x-d/2)*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C)-((m_R+m_F)/(m_C+m_R+m_F))*(g+((s_x-m_F*d/(m_R+m_F))*sin(theta_C)+s_y*cos(theta_C))*w_C*w_C)-m_C*g/(m_C+m_R+m_F))
                 -s_y*(I_zzF/(R*R)-m_F-I_zzR/(R*R)+m_R)*(s_x*cos(theta_C)*w_C*w_C-s_y*sin(theta_C)*w_C*w_C -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)-s_y*sin(theta_C))*w_C*w_C*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + d*cos(theta_C)*w_C*w_C*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F));
-        double denominator = I_zzC-(m_F*(d-s_x)-2*s_x*m_R)*(s_x*cos(theta_C)*s_y*sin(theta_C))+m_F*(d-s_x)*d*cos(theta_C)+s_y*(I_zzF/(R*R)-m_F-I_zzR/(R*R)+m_R)*(s_x*sin(theta_C)+s_y*cos(theta_C))-s_y*(I_zzF/(R*R)-m_F)*d*sin(theta_C)
-                +(m_F*(d-s_x)-2*s_x*m_R)*((m_R+m_F)/(m_C+m_R+m_F))*((s_x-m_F*d/(m_R+m_F))*cos(theta_C)-s_y*sin(theta_C))
+        double denominator = I_zzC-(m_F*(d-s_x)-s_x*m_R)*(s_x*cos(theta_C)-s_y*sin(theta_C))+m_F*(d-s_x)*d*cos(theta_C)+s_y*(I_zzF/(R*R)-m_F-I_zzR/(R*R)+m_R)*(s_x*sin(theta_C)+s_y*cos(theta_C))-s_y*(I_zzF/(R*R)-m_F)*d*sin(theta_C)
+                +(m_F*(d-s_x)-2*s_x*m_R)*((m_R+m_F)/(m_C+m_R+m_F))*((s_x-m_F*d/(m_R+m_F))*cos(theta_C)+s_y*sin(theta_C))
                 +s_y*(I_zzF/(R*R)-m_F-I_zzR/(R*R)+m_R)*(d*sin(theta_C)*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*sin(theta_C)+s_y*cos(theta_C))*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F));
         return numerator/denominator;
     }
@@ -127,8 +127,8 @@ public class Car
      * compute the instantaneous x-acceleration of the car frame, as a function of the current values of theta_C and
      * theta_Cpp (angular acceleration).
      */
-    public static double getCurrentXAcceleration(double y_C, double v_yC, double theta_C, double w_C){
-        double theta_Cpp = getCurrentThetaAcceleration(y_C, v_yC, theta_C, w_C);
+    public static double getCurrentXAcceleration(){
+        double theta_Cpp = getCurrentThetaAcceleration();
         return -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)*w_C*w_C+s_x*sin(theta_C)*theta_Cpp-s_y*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*theta_Cpp)*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F)+(d*cos(theta_C)*w_C*w_C+d*sin(theta_C)*theta_Cpp)*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F);
     }
 
@@ -136,20 +136,23 @@ public class Car
      * compute the instantaneous y-acceleration of the car frame, as a function of the current values of y_C, v_yC,
      * theta_C and theta_Cpp (angular acceleration).
      */
-    public static double getCurrentYAcceleration(double y_C, double v_yC, double theta_C, double w_C){
-        double theta_Cpp = getCurrentThetaAcceleration(y_C, v_yC, theta_C, w_C);
-        return (2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)-s_y*cos(theta_C)) - (2*h/(m_C+m_R+m_F))*(v_yC-(s_x+d/2)*cos(theta_C)*w_C-s_y*sin(theta_C)*w_C) - ((m_R+m_F)/(m_C+m_R+m_F))*(g+(s_x-m_F*d/(m_R+m_F))*sin(theta_C)*w_C*w_C-(s_x-m_F*d/(m_R+m_F))*cos(theta_C)*theta_Cpp-s_y*cos(theta_C)*w_C*w_C-s_y*sin(theta_C)*theta_Cpp)-m_C*g/(m_C+m_R+m_F);
+    public static double getCurrentYAcceleration(){
+        double theta_Cpp = getCurrentThetaAcceleration();
+        return (2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)+s_y*cos(theta_C)) - (2*h/(m_C+m_R+m_F))*(v_yC-(s_x-d/2)*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C) - ((m_R+m_F)/(m_C+m_R+m_F))*(g+(s_x-m_F*d/(m_R+m_F))*sin(theta_C)*w_C*w_C-(s_x-m_F*d/(m_R+m_F))*cos(theta_C)*theta_Cpp+s_y*cos(theta_C)*w_C*w_C+s_y*sin(theta_C)*theta_Cpp)-m_C*g/(m_C+m_R+m_F);
     }
 
     /**
      * Compute the instantaneous accelerations for the current position and velocity of the car, to see if they look like they're in the right ballpark:
      */
     public static void runTests(){
-        double thetaAccel = Car.getCurrentThetaAcceleration(y_C, v_yC, theta_C, w_C);
-        double xAccel = Car.getCurrentXAcceleration(y_C, v_yC, theta_C, w_C);
-        double yAccel = Car.getCurrentYAcceleration(y_C, v_yC, theta_C, w_C);
+        double thetaAccel = Car.getCurrentThetaAcceleration();
+        double xAccel = Car.getCurrentXAcceleration();
+        double yAccel = Car.getCurrentYAcceleration();
         System.out.println("thetaAccel: " + thetaAccel);
         System.out.println("xAccel: " + xAccel);
         System.out.println("yAccel: " + yAccel);
+
+        System.out.println("position of rear wheel is " + getRearWheelPosition());
+        System.out.println("position of front wheel is " + getFrontWheelPosition());
     }
 }
