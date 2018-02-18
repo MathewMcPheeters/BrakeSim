@@ -78,10 +78,10 @@ public class SimulationArea extends Pane {
 
     private void initializeSidePanels(){
         leftSidePanel = new Rectangle(0,95,36,255);
-        leftSidePanel.setFill(Color.BLACK);
+        leftSidePanel.setFill(Color.valueOf("F4F4F4"));
 
         rightSidePanel = new Rectangle(558,95,36,255);
-        rightSidePanel.setFill(Color.BLACK);
+        rightSidePanel.setFill(Color.valueOf("F4F4F4"));
 
         panelGroup.getChildren().addAll(leftSidePanel,rightSidePanel);
         this.getChildren().add(panelGroup);
