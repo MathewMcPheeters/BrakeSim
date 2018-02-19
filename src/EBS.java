@@ -102,12 +102,15 @@ public class EBS extends Thread
                 @Override
                 public void run()
                 {
+                    System.out.println("Car X Velocity: "+Car.getXVelocity());
+
                     if(Car.getXVelocity()<= 0)
                     {
                       Car.setTorque(0);
                       pressure = 0;
                       cancel();
                     }
+
                     double currentTorque = Car.getTorque();
                     System.out.println("CURRENT TORQUE: "+currentTorque);
                     Car.setTorque(currentTorque + pressure);
