@@ -8,9 +8,13 @@ public class EBS extends Thread
     private boolean running = true;
     private boolean braking = false;
     private volatile SimpleBooleanProperty trigger = new SimpleBooleanProperty();
-    public void triggerBrake()
+    public void engageBrakes()
     {
       trigger.setValue(true);
+    }
+    public void disengageBrakes()
+    {
+        trigger.setValue(false);
     }
     public void terminate()
     {

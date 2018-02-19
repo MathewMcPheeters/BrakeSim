@@ -52,12 +52,13 @@ public class Car
     // Duplicate variables (Todo: these need to be collapsed into other variables or removed):
     public static double rear_theta = 0;
     public static double front_theta = 0;
-    private static double acceleration = 0.0;
     private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
     private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
 
     // Variables regarding the environment
-    private static double T = 500; // torque applied by the brakes
+    private static double accelerationTorque = 0.0; // Torque due to pressing the accelerator (N-m)
+    private static double brakeTorque = 0.0; // torque applied by the brakes (N-m)
+    private static double T = 0.0; // Combined torque applied by the brakes and the gas pedal (N-m)
 
     // Setters
     public static void setTorque(double torque){T = torque;}
@@ -76,17 +77,28 @@ public class Car
     public static void setV_xC(double newV_xC)
     {
         v_xC = newV_xC;
-        velocityChange.setValue(true);
     }
     public static double getTorque(){return T;}
-    public static void setAcceleration(double newAcceleration)
+    public static void setAccelerationTorque(double newAccelerationTorque)
     {
-        acceleration = newAcceleration;
-        accelerationChange.setValue(true);
+        accelerationTorque = newAccelerationTorque;
+        T = brakeTorque-accelerationTorque;
     }
-    public static Double getAcceleration()
+    public static void setBrakeTorque(double newBrakeTorque){
+        brakeTorque = newBrakeTorque;
+        T = brakeTorque-accelerationTorque;
+    }
+    public static void engageBrakes(){
+        setBrakeTorque(5000.0);
+        brakeSystem.engageBrakes();
+    }
+    public static void disengageBrakes(){
+        setBrakeTorque(0.0);
+        brakeSystem.disengageBrakes();
+    }
+    public static Double getAccelerationTorque()
     {
-        return acceleration;
+        return accelerationTorque;
     }
     public static Double getXVelocity(){return v_xC;}
     public static Gear getGear()
@@ -154,6 +166,9 @@ public class Car
      * theta_Cpp (angular acceleration).
      */
     public static double getCurrentXCAcceleration(){
+        // sanity check before big computations
+        if(v_xC==0 && gear!=Gear.REVERSE && T>0) return 0.0;
+
         double theta_Cpp = getCurrentThetaCAcceleration();
         return -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)*w_C*w_C+s_x*sin(theta_C)*theta_Cpp-s_y*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*theta_Cpp)*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F)+(d*cos(theta_C)*w_C*w_C+d*sin(theta_C)*theta_Cpp)*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F);
     }
@@ -231,7 +246,6 @@ public class Car
         if(v_xC_next<0 && gear!=Gear.REVERSE) v_xC_next = 0;
         if(w_R_next<0 && gear!=Gear.REVERSE) w_R_next = 0.0;
         if(w_F_next<0 && gear!=Gear.REVERSE) w_F_next = 0.0;
-
 
         // Get the return value ready:
         double deltaX = x_C_next - x_C;

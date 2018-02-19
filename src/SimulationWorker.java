@@ -6,7 +6,7 @@ public class SimulationWorker extends Thread
 {
   int speed = 5; //TODO: temporary value. Speed/Acceleration updates from Car will be needed for animation timing
   private int simulationTimeElapsed = 0;
-  private int tickInterval = 40; // 40 ==> 25 updates per second
+  private int tickInterval = 20; // 40 ==> 25 updates per second
   //private int physicsInterval = 5; // physics updates happen many times per animation update.
   private long lastTick = 0;
   private boolean terminate = false;
@@ -20,6 +20,12 @@ public class SimulationWorker extends Thread
     running = b;
   }
   private SimulationArea simulationArea = null;
+  private Dashboard dashboard;
+
+  public void resetLastTick(){
+    lastTick = System.currentTimeMillis();
+  }
+
   @Override
   public void run()
   {
@@ -68,6 +74,7 @@ public class SimulationWorker extends Thread
 
   public void setSimulationArea(SimulationArea area){
     simulationArea = area;
+    this.dashboard = dashboard;
   }
 
   public SimulationArea getSimulationArea(){
