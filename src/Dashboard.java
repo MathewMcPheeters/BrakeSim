@@ -15,10 +15,6 @@ import javafx.scene.layout.VBox;
 public class Dashboard extends VBox
 {
 
-  private void resetSimulationWorker(SimulationWorker worker)
-  {
-    worker = new SimulationWorker();
-  }
   public Dashboard(double spacing, SimulationWorker simulationWorker)
   {
     super(spacing);
@@ -142,6 +138,13 @@ public class Dashboard extends VBox
       }
       if(Car.getAcceleration() != 0 || Car.getXVelocity() != 0)
       {
+        if(Car.getGear() == Gear.NEUTRAL || Car.getGear() == Gear.PARK)
+        {
+          String message = "Error: Acceleration and/or speed cannot be nonzero if "+
+                           "starting gear is Park or Neutral";
+          new ErrorDialog(Alert.AlertType.ERROR,message);
+          return;
+        }
         if (!simulationWorker.isAlive())
         {
           simulationWorker.start();

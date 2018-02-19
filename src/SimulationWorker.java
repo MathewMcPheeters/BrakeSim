@@ -22,8 +22,6 @@ public class SimulationWorker extends Thread
   @Override
   public void run()
   {
-    Car.setEBSSystem(new EBS());
-    Car.getBrakeSystem().start();
     lastTick = System.currentTimeMillis();
     while(!terminate)
     {

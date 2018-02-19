@@ -91,8 +91,9 @@ public class Car
     public static void setEBSSystem(EBS system){brakeSystem = system;}
     public static EBS getBrakeSystem(){return brakeSystem;}
 
-    public Car()
+    static
     {
+        brakeSystem = new EBS();
         brakeSystem.start();
     }
 
