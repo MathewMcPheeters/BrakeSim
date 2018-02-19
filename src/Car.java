@@ -22,9 +22,9 @@ public class Car
 
     // Constants regarding the car's suspension system and the car's physical dimensions:
     private static double R = 0.3; // wheel radius (m)
-    private static double d = 4; // distance between the wheels (m)
-    private static double s_x = 2; // x-distance between rear wheel and frame's center of mass (m)
-    private static double s_y = 0.2; // y-distance between wheels and frame's center of mass (m)
+    public static double d = 4; // distance between the wheels (m)
+    public static double s_x = 2; // x-distance between rear wheel and frame's center of mass (m)
+    public static double s_y = 0.2; // y-distance between wheels and frame's center of mass (m)
     private static double k = 50000.0; // The spring coefficient of the car's suspension system (N/m)
     private static double h = 1.0; // The dampening coefficient of the car's suspension system (N-s/m)
 
@@ -35,17 +35,20 @@ public class Car
 
     // Variables regarding the position and velocity of the car.
     private static double x_C = 5; // x-position of car's center of mass (m)
-    private static double y_C = 0.49; // y-position of car's center of mass (m)
-    private static double theta_C = 0.0; // car frame's angle of rotation (radians)
+    public static double y_C = 0.49; // y-position of car's center of mass (m)
+    public static double theta_C = 0.0; // car frame's angle of rotation (radians)
     private static double v_xC = 10.0; // x-velocity of car's center of mass (m/s)
     private static double v_yC = 0.0; // y-velocity of car's center of mass (m/s)
     private static double w_C = 0.0; // rate of rotation of car frame (radians/s)
+
+    public static double rear_theta = 0;
+    public static double front_theta = 0;
 
     private static double acceleration = 0.0;
     private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
     private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
     // Variables regarding the environment
-    private static double T = -500.0; // torque applied by the brakes
+    private static double T = 0; // torque applied by the brakes
 
     // Setters
     public static void setTorque(double torque){T = torque;}
@@ -159,5 +162,15 @@ public class Car
 
         System.out.println("position of rear wheel is " + getRearWheelPosition());
         System.out.println("position of front wheel is " + getFrontWheelPosition());
+
+        Car.v_xC += xAccel;
+        Car.v_yC += 0; //yAccel;
+
+        Car.x_C += Car.v_xC;
+        Car.y_C += Car.v_yC;
+
+        Car.rear_theta += Car.v_xC / 100;
+        Car.front_theta += Car.v_xC / 100;
+
     }
 }

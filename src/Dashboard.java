@@ -56,7 +56,7 @@ public class Dashboard extends VBox
         {
           double speed = Double.parseDouble(speedText);
           Car.setV_xC(speed);
-          simulationWorker.getSimulationArea().setSpeed(speed);
+          //simulationWorker.getSimulationArea().setSpeed(speed);
           System.out.println("Speed is " + speed);
         }
         catch(NumberFormatException e)
