@@ -51,7 +51,7 @@ import java.lang.Math;
 
     public void update()
     {
-      System.out.println(Car.getXVelocity());
+      //System.out.println(Car.getXVelocity());
 
       // Draw the center of mass at (draw_cx, draw_cy)
       double draw_cx = 290;

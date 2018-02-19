@@ -1,5 +1,4 @@
 import javafx.beans.property.SimpleBooleanProperty;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,35 +42,35 @@ public class EBS extends Thread
                         //Braking policy goes here
                         if(currentVelocity <= 10.0)
                         {
-                            pressure = 50.0;
+                            pressure = 5.0;
                         }
                         else if(currentVelocity > 10.0 && currentVelocity <= 20)
                         {
-                            pressure = 70.0;
+                            pressure = 7.0;
                         }
                         else if(currentVelocity > 20.0 && currentVelocity <= 30)
                         {
-                            pressure = 90.0;
+                            pressure = 9.0;
                         }
                         else if(currentVelocity > 30.0 && currentVelocity <= 40)
                         {
-                            pressure = 110.0;
+                            pressure = 11.0;
                         }
                         else if(currentVelocity > 40.0 && currentVelocity <= 50)
                         {
-                            pressure = 130.0;
+                            pressure = 13.0;
                         }
                         else if(currentVelocity > 50.0 && currentVelocity <= 60)
                         {
-                            pressure = 160.0;
+                            pressure = 16.0;
                         }
                         else if(currentVelocity > 60.0 && currentVelocity <= 80)
                         {
-                            pressure = 200.0;
+                            pressure = 20.0;
                         }
                         else if(currentVelocity > 80.0)
                         {
-                            pressure = 230.0;
+                            pressure = 23.0;
                         }
                         BrakeTimer timer = new BrakeTimer(pressure);
                         timer.runBrakeTask();
@@ -103,9 +102,15 @@ public class EBS extends Thread
                 @Override
                 public void run()
                 {
+                    if(Car.getXVelocity()<= 0)
+                    {
+                      Car.setTorque(0);
+                      pressure = 0;
+                      cancel();
+                    }
                     double currentTorque = Car.getTorque();
-                    System.out.println(currentTorque);
-                    Car.setTorque(currentTorque - pressure);
+                    System.out.println("CURRENT TORQUE: "+currentTorque);
+                    Car.setTorque(currentTorque + pressure);
                 }
             },0,1000);
         }
