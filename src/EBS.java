@@ -7,14 +7,9 @@ public class EBS extends Thread
     private boolean terminate = false;
     private boolean running = true;
     private boolean braking = false;
-    private volatile SimpleBooleanProperty trigger;
+    private volatile SimpleBooleanProperty trigger = new SimpleBooleanProperty();
     public void triggerBrake()
     {
-
-      if(trigger.getValue() == false)
-      {
-          trigger.setValue(true);
-      }
       trigger.setValue(true);
     }
     public void terminate()
@@ -28,7 +23,6 @@ public class EBS extends Thread
     public EBS()
     {
         trigger = new SimpleBooleanProperty(false);
-        trigger.setValue(false);
     }
     @Override
     public void run()
@@ -49,27 +43,27 @@ public class EBS extends Thread
                         //Braking policy goes here
                         if(currentVelocity <= 0.1)
                         {
-                            pressure = 5.0;
+                            pressure = 0.05;
                         }
                         else if(currentVelocity > 0.1 && currentVelocity <= 0.2)
                         {
-                            pressure = 7.0;
+                            pressure = 0.07;
                         }
-                        else if(currentVelocity > 20.0 && currentVelocity <= 30)
+                        else if(currentVelocity > 0.2 && currentVelocity <= 0.3)
                         {
-                            pressure = 9.0;
+                            pressure = 0.09;
                         }
-                        else if(currentVelocity > 30.0 && currentVelocity <= 40)
+                        else if(currentVelocity > 0.3 && currentVelocity <= 0.4)
                         {
-                            pressure = 11.0;
+                            pressure = 0.1;
                         }
-                        else if(currentVelocity > 40.0 && currentVelocity <= 50)
+                        else if(currentVelocity > 0.4 && currentVelocity <= 0.5)
                         {
-                            pressure = 13.0;
+                            pressure = 0.13;
                         }
                         else if(currentVelocity > 50.0 && currentVelocity <= 60)
                         {
-                            pressure = 16.0;
+                            pressure = 0.16;
                         }
                         else if(currentVelocity > 60.0 && currentVelocity <= 80)
                         {
@@ -114,7 +108,6 @@ public class EBS extends Thread
                 public void run()
                 {
                     System.out.println("Car X Velocity: "+Car.getXVelocity());
-
                     if(Car.getXVelocity()<= 0)
                     {
                       Car.setTorque(0);
