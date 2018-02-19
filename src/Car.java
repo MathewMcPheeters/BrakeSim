@@ -48,6 +48,7 @@ public class Car
     private static double T = -500.0; // torque applied by the brakes
 
     // Setters
+    public static void setTorque(double torque){T = torque;}
     public static void setGear(Gear newGear){
         gear = newGear;
     }
@@ -65,6 +66,7 @@ public class Car
         v_xC = newV_xC;
         velocityChange.setValue(true);
     }
+    public static double getTorque(){return T;}
     public static void setAcceleration(double newAcceleration)
     {
         acceleration = newAcceleration;

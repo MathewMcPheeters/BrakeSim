@@ -116,15 +116,18 @@ public class SimulationArea extends Pane {
         System.out.println(roadDashes.size());
         //Kind of hacky solution to update UI on JavaFX thread. If it is not done this way, throws an exception
         Pane context = this;
-        Platform.runLater(new Runnable() {
+        Platform.runLater(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 context.getChildren().add(newDash.shape);
                 newDash.shape.toBack();
             }
         });
 
-        if(animationsPlaying){
+        if(animationsPlaying)
+        {
             newDash.transition.play();
         }
     }
