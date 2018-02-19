@@ -156,13 +156,14 @@ public class Car
         double thetaAccel = Car.getCurrentThetaAcceleration();
         double xAccel = Car.getCurrentXAcceleration();
         double yAccel = Car.getCurrentYAcceleration();
+        /**
         System.out.println("thetaAccel: " + thetaAccel);
         System.out.println("xAccel: " + xAccel);
         System.out.println("yAccel: " + yAccel);
 
         System.out.println("position of rear wheel is " + getRearWheelPosition());
         System.out.println("position of front wheel is " + getFrontWheelPosition());
-
+        **/
         Car.v_xC += xAccel;
         Car.v_yC += 0; //yAccel;
 

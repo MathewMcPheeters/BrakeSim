@@ -185,6 +185,7 @@ public class Dashboard extends VBox
     {
       if(simulationWorker.isAlive())
       {
+        System.out.println("Here we go..........");
         Car.getBrakeSystem().triggerBrake();
       }
       else

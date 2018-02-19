@@ -7,10 +7,15 @@ public class EBS extends Thread
     private boolean terminate = false;
     private boolean running = true;
     private boolean braking = false;
-    private SimpleBooleanProperty trigger;
+    private volatile SimpleBooleanProperty trigger;
     public void triggerBrake()
     {
-      trigger.set(true);
+
+      if(trigger.getValue() == false)
+      {
+          trigger.setValue(true);
+      }
+      trigger.setValue(true);
     }
     public void terminate()
     {
@@ -23,6 +28,7 @@ public class EBS extends Thread
     public EBS()
     {
         trigger = new SimpleBooleanProperty(false);
+        trigger.setValue(false);
     }
     @Override
     public void run()
@@ -31,8 +37,9 @@ public class EBS extends Thread
         {
             while(running)
             {
-                if(trigger.get())
+                if(trigger.getValue() == true)
                 {
+                    System.out.println("Thread is running.....");
                     if(!braking)
                     {
                         braking = true;
@@ -40,11 +47,11 @@ public class EBS extends Thread
                         double currentVelocity = Car.getXVelocity();
                         double pressure = 0;
                         //Braking policy goes here
-                        if(currentVelocity <= 10.0)
+                        if(currentVelocity <= 0.1)
                         {
                             pressure = 5.0;
                         }
-                        else if(currentVelocity > 10.0 && currentVelocity <= 20)
+                        else if(currentVelocity > 0.1 && currentVelocity <= 0.2)
                         {
                             pressure = 7.0;
                         }
@@ -76,6 +83,10 @@ public class EBS extends Thread
                         timer.runBrakeTask();
                         trigger.setValue(false);
                     }
+                }
+                else
+                {
+                 // System.out.println("Brake Trigger is False");
                 }
             }
             try

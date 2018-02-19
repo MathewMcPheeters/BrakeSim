@@ -49,7 +49,7 @@ public class SimulationWorker extends Thread
       //simulationArea.updateAnimations();
       lastTick = currentTime;
       simulationTimeElapsed ++;
-      System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);
+      //System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);
       simulationArea.carVis.update();
       Car.runTests();
       simulationArea.update();
