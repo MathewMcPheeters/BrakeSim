@@ -41,12 +41,19 @@ public class Car
     private static double v_yC = 0.0; // y-velocity of car's center of mass (m/s)
     private static double w_C = 0.0; // rate of rotation of car frame (radians/s)
 
+    // Variables regarding the rotation of the wheels:
+    private static double theta_R = 0.0; // Rear wheel's angle of rotation (radians)
+    private static double w_R = 0.0; // Rear wheel's rate of rotation (radians/s)
+    private static double theta_F = 0.0; // Front wheel's angle of rotation (radians)
+    private static double w_F = 0.0; // Front wheel's rate of rotation (radians/s)
+
+    // Duplicate variables (Todo: these need to be collapsed into other variables or removed):
     public static double rear_theta = 0;
     public static double front_theta = 0;
-
     private static double acceleration = 0.0;
     private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
     private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
+
     // Variables regarding the environment
     private static double T = 0; // torque applied by the brakes
 
@@ -102,6 +109,15 @@ public class Car
         brakeSystem.start();
     }
 
+    /**
+     * Sets some Car variables for a given car velocity, assuming rolling contact
+     */
+    public static void setVariablesRollingContact(double initial_v_xC){
+        v_xC = initial_v_xC;
+        w_R = v_xC/R;
+        w_F = v_xC/R;
+    }
+
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition(){
         double x_R = x_C - s_x*cos(theta_C) + s_y*sin(theta_C);
@@ -121,7 +137,7 @@ public class Car
      * compute the instantaneous rate of rotational acceleration of the car frame, as a function of the current values
      * of y_C, v_yC, theta_C and w_C.
      */
-    public static double getCurrentThetaAcceleration(){
+    public static double getCurrentThetaCAcceleration(){
         double numerator = (d-2*s_x)*(k*(R-y_C+s_x*sin(theta_C)+s_y*cos(theta_C))-h*(v_yC-s_x*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C)) + m_F*(d-s_x)*(d*sin(theta_C)*w_C*w_C) + s_y*(I_zzF/(R*R)-m_F)*(d*cos(theta_C)*w_C*w_C) -s_y*T/R
                 -(m_F*(d-s_x)-s_x*m_R)*(g+s_x*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*w_C*w_C+(2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)+s_y*cos(theta_C))-(2*h/(m_C+m_R+m_F))*(v_yC-(s_x-d/2)*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C)-((m_R+m_F)/(m_C+m_R+m_F))*(g+((s_x-m_F*d/(m_R+m_F))*sin(theta_C)+s_y*cos(theta_C))*w_C*w_C)-m_C*g/(m_C+m_R+m_F))
                 -s_y*(I_zzF/(R*R)-m_F-I_zzR/(R*R)+m_R)*(s_x*cos(theta_C)*w_C*w_C-s_y*sin(theta_C)*w_C*w_C -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)-s_y*sin(theta_C))*w_C*w_C*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + d*cos(theta_C)*w_C*w_C*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F));
@@ -135,8 +151,8 @@ public class Car
      * compute the instantaneous x-acceleration of the car frame, as a function of the current values of theta_C and
      * theta_Cpp (angular acceleration).
      */
-    public static double getCurrentXAcceleration(){
-        double theta_Cpp = getCurrentThetaAcceleration();
+    public static double getCurrentXCAcceleration(){
+        double theta_Cpp = getCurrentThetaCAcceleration();
         return -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)*w_C*w_C+s_x*sin(theta_C)*theta_Cpp-s_y*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*theta_Cpp)*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F)+(d*cos(theta_C)*w_C*w_C+d*sin(theta_C)*theta_Cpp)*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F);
     }
 
@@ -144,18 +160,90 @@ public class Car
      * compute the instantaneous y-acceleration of the car frame, as a function of the current values of y_C, v_yC,
      * theta_C and theta_Cpp (angular acceleration).
      */
-    public static double getCurrentYAcceleration(){
-        double theta_Cpp = getCurrentThetaAcceleration();
+    public static double getCurrentYCAcceleration(){
+        double theta_Cpp = getCurrentThetaCAcceleration();
         return (2*k/(m_C+m_R+m_F))*(R-y_C+(s_x-d/2)*sin(theta_C)+s_y*cos(theta_C)) - (2*h/(m_C+m_R+m_F))*(v_yC-(s_x-d/2)*cos(theta_C)*w_C+s_y*sin(theta_C)*w_C) - ((m_R+m_F)/(m_C+m_R+m_F))*(g+(s_x-m_F*d/(m_R+m_F))*sin(theta_C)*w_C*w_C-(s_x-m_F*d/(m_R+m_F))*cos(theta_C)*theta_Cpp+s_y*cos(theta_C)*w_C*w_C+s_y*sin(theta_C)*theta_Cpp)-m_C*g/(m_C+m_R+m_F);
+    }
+
+    /**
+     * Compute the instantaneous angular acceleration of the rear wheel
+     * @return the acceleration in radians/s^2
+     */
+    public static double getCurrentThetaRAcceleration(){
+        //double v_yR = v_yC - s_x*cos(theta_C)*w_C + s_y*sin(theta_C)*w_C;
+        //double y_R = getRearWheelPosition().getY();
+        //return (T-(N+h*v_yR)/k+y_R)*f_R/I_zzR;
+        return getCurrentXRAcceleration()/R;
+    }
+
+    /**
+     * Compute the instantaneous angular acceleration of the front wheel
+     * @return the acceleration in radians/s^2
+     */
+    public static double getCurrentThetaFAcceleration(){
+        return 0.0;
+    }
+
+    /**
+     * Compute the instantaneous X-acceleration of the front wheel
+     * @return the acceleration in m/s^2
+     */
+    private static double getCurrentXFAcceleration(){
+        double theta_Cpp = getCurrentThetaCAcceleration();
+        double x_Rpp = getCurrentXRAcceleration();
+        return x_Rpp - d*cos(theta_C)*w_C*w_C - d*sin(theta_C)*theta_Cpp;
+    }
+
+    /**
+     * Compute the instantaneous X-acceleration of the rear wheel
+     * @return the acceleration in m/s^2
+     */
+    private static double getCurrentXRAcceleration(){
+        double theta_Cpp = getCurrentThetaCAcceleration();
+        return getCurrentXCAcceleration() + s_x*cos(theta_C)*w_C*w_C -s_y*sin(theta_C)*w_C*w_C + theta_Cpp*(s_x*sin(theta_C) + s_y*cos(theta_C));
+    }
+
+    /**
+     * updates the car's position and velocity for the next timestep
+     * @param deltaTime The amount of time (in seconds) that has passed since the last timestep.
+     */
+    public static void step(double deltaTime){
+        // Compute values for next timestep (car frame)
+        double v_xC_next = v_xC + getCurrentXCAcceleration()*deltaTime;
+        double x_C_next = x_C + v_xC*deltaTime;
+        double v_yC_next = v_yC + getCurrentYCAcceleration()*deltaTime;
+        double y_C_next = y_C + v_yC*deltaTime;
+        double w_C_next = w_C + getCurrentThetaCAcceleration()*deltaTime;
+        double theta_C_next = theta_C + w_C*deltaTime;
+
+        // Compute values for next timestep (wheels)
+        double w_R_next = w_R + getCurrentThetaRAcceleration()*deltaTime;
+        double theta_R_next = theta_R + w_R*deltaTime;
+        double w_F_next = w_F + getCurrentThetaFAcceleration()*deltaTime;
+        double theta_F_next = theta_F + w_F*deltaTime;
+
+        // Update values (car frame)
+        x_C = x_C_next;
+        v_xC = v_xC_next;
+        y_C = y_C_next;
+        v_yC = v_yC_next;
+        theta_C = theta_C_next;
+        w_C = w_C_next;
+
+        // Update values (wheels)
+        w_R = w_R_next;
+        theta_R = theta_R_next;
+        w_F = w_F_next;
+        theta_F = theta_F_next;
     }
 
     /**
      * Compute the instantaneous accelerations for the current position and velocity of the car, to see if they look like they're in the right ballpark:
      */
     public static void runTests(){
-        double thetaAccel = Car.getCurrentThetaAcceleration();
-        double xAccel = Car.getCurrentXAcceleration();
-        double yAccel = Car.getCurrentYAcceleration();
+        double thetaAccel = Car.getCurrentThetaCAcceleration();
+        double xAccel = Car.getCurrentXCAcceleration();
+        double yAccel = Car.getCurrentYCAcceleration();
         /**
         System.out.println("thetaAccel: " + thetaAccel);
         System.out.println("xAccel: " + xAccel);

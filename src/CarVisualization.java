@@ -13,7 +13,7 @@ import java.lang.Math;
   public class CarVisualization
   {
 
-    private final double m_to_px = 12.5;
+    private final double m_to_px = 12.5; // Conversion ratio between meters and pixels
     public HashMap<ComponentNames, Shape> components;
     public enum ComponentNames
     {
@@ -47,6 +47,9 @@ import java.lang.Math;
       this.components.get( ComponentNames.FRONT_WHEEL_LINE ).setFill( Color.BLACK );
       this.components.get( ComponentNames.CENTER_OF_MASS ).setFill( Color.YELLOW );
 
+      // Set styles appropriately
+      this.components.get( ComponentNames.CHASSIS ).setStyle("-fx-stroke-width: 3;");
+
     }
 
     public void update()
@@ -71,7 +74,6 @@ import java.lang.Math;
 
       // Set the location for the center of mass visual and the width for the chassis line.
       this.components.get( ComponentNames.REAR_WHEEL ).relocate(rotated_x, rotated_y);
-      this.components.get( ComponentNames.CHASSIS ).setStyle("-fx-stroke-width: 3;");
 
       // Set the position of the rear wheel.
       ((Line) this.components.get( ComponentNames.CHASSIS )).setStartX( rotated_x+10);
