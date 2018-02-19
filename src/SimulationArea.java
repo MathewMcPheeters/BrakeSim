@@ -22,10 +22,29 @@ public class SimulationArea extends Pane {
     private Image backgroundImageFile = new Image("Resources/testBackground4.png");
     private BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO,BackgroundSize.AUTO,false,false,true,false);
     private BackgroundImage backgroundImage = new BackgroundImage(backgroundImageFile, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-
     public CarVisualization carVis;
+    private final double m_to_px = 12.5;
+
+    ArrayList<Rectangle> dashes = new ArrayList<>();
+
+    public void update()
+    {
+      for (int i  = 0; i < dashes.size(); i++)
+      {
+        dashes.get(i).setX((dashes.get(i).getX()-Car.getXVelocity()*m_to_px)%600);
+        if (dashes.get(i).getX() < 0)
+          dashes.get(i).setX(600+dashes.get(i).getX());
+      }
+    }
+
     public SimulationArea(){
 
+        for (int i = 0; i < 6; i++)
+        {
+          dashes.add(dashes.size(), new Rectangle( i * 100, 280, 30, 3));
+          dashes.get(dashes.size()-1).setFill(Color.WHITE);
+        }
+        this.getChildren().addAll(dashes);
         this.setBackground(new Background(backgroundImage));
 
         carVis = new CarVisualization();

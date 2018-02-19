@@ -52,6 +52,7 @@ public class SimulationWorker extends Thread
       System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);
       simulationArea.carVis.update();
       Car.runTests();
+      simulationArea.update();
     }
 
     //Start animations at the beginning of the simulation

@@ -169,8 +169,8 @@ public class Car
         Car.x_C += Car.v_xC;
         Car.y_C += Car.v_yC;
 
-        Car.rear_theta += Car.v_xC / 100;
-        Car.front_theta += Car.v_xC / 100;
+        Car.rear_theta += Car.v_xC;
+        Car.front_theta += Car.v_xC;
 
     }
 }
