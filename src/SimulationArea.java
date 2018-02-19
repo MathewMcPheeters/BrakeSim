@@ -27,11 +27,11 @@ public class SimulationArea extends Pane {
 
     ArrayList<Rectangle> dashes = new ArrayList<>();
 
-    public void update()
+    public void update(double deltaX)
     {
       for (int i  = 0; i < dashes.size(); i++)
       {
-        dashes.get(i).setX((dashes.get(i).getX()-Car.getXVelocity()*m_to_px)%600);
+        dashes.get(i).setX((dashes.get(i).getX()-deltaX*m_to_px)%600);
         if (dashes.get(i).getX() < 0)
           dashes.get(i).setX(600+dashes.get(i).getX());
       }

@@ -6,7 +6,8 @@ public class SimulationWorker extends Thread
 {
   int speed = 5; //TODO: temporary value. Speed/Acceleration updates from Car will be needed for animation timing
   private int simulationTimeElapsed = 0;
-  private int tickInterval = 16; //Tick every second
+  private int tickInterval = 40; // 40 ==> 25 updates per second
+  //private int physicsInterval = 5; // physics updates happen many times per animation update.
   private long lastTick = 0;
   private boolean terminate = false;
   private boolean running = true;
@@ -22,6 +23,7 @@ public class SimulationWorker extends Thread
   @Override
   public void run()
   {
+    Car.setVariablesRollingContact();
     lastTick = System.currentTimeMillis();
     while(!terminate)
     {
@@ -47,12 +49,16 @@ public class SimulationWorker extends Thread
 
     if(deltaTime >= tickInterval){
       //simulationArea.updateAnimations();
+      //System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);
+
+      // bookkeeping
       lastTick = currentTime;
       simulationTimeElapsed ++;
-      //System.out.println("simulationTimeElapsed= " + simulationTimeElapsed);
+
+      // updates
+      double deltaX = Car.step(deltaTime);
       simulationArea.carVis.update();
-      Car.runTests();
-      simulationArea.update();
+      simulationArea.update(deltaX);
     }
 
     //Start animations at the beginning of the simulation
