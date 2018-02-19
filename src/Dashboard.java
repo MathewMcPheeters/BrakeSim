@@ -163,13 +163,18 @@ public class Dashboard extends VBox
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
     {
+
       if(simulationWorker.isAlive())
       {
         simulationWorker.setRunning(false);
-        simulationWorker.terminate();
       }
+      Car.getBrakeSystem().disengageBrakes();
       Car.setX_C(0);
       Car.setY_C(0);
+      Car.resetVariables();
+      Car.setVariablesRollingContact();
+      accelerationInput.clear();
+      speedInput.clear();
     });
     Button brake = new Button("Brake");
     brake.setOnAction((event) ->

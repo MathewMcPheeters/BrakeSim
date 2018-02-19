@@ -78,6 +78,7 @@ public class Car
     {
         v_xC = newV_xC;
     }
+    public static void setW_R(double newW_R){w_R = newW_R;}
     public static double getTorque(){return T;}
     public static void setAccelerationTorque(double newAccelerationTorque)
     {
@@ -130,7 +131,23 @@ public class Car
         w_R = v_xC/R;
         w_F = v_xC/R;
     }
-
+    public static void resetVariables()
+    {
+        x_C = 5;
+        y_C = 0.49;
+        theta_C = 0.0;
+        v_xC = 10.0;
+        v_yC = 0.0;
+        w_C = 0.0;
+        theta_R = 0.0;
+        w_R = 0.0;
+        theta_F = 0.0;
+        w_F = 0.0;
+        rear_theta = 0;
+        front_theta = 0;
+        velocityChange = new SimpleBooleanProperty(false);
+        accelerationChange = new SimpleBooleanProperty(false);
+    }
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition(){
         double x_R = x_C - s_x*cos(theta_C) + s_y*sin(theta_C);
