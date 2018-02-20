@@ -90,7 +90,11 @@ public class Car
         brakeTorque = newBrakeTorque;
         T = brakeTorque-accelerationTorque;
     }
-    public static void engageBrakes()
+    public static void engageBrakesLongPress()
+    {
+        brakeSystem.engageBrakes();
+    }
+    public static void engageBrakesShortPress()
     {
         brakeSystem.engageBrakes();
     }
@@ -285,7 +289,7 @@ public class Car
         w_F = w_F_next;
         theta_F = theta_F_next;
 
-        printCarStats();
+        //printCarStats();
         return deltaX;
     }
 

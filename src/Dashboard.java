@@ -17,6 +17,7 @@ public class Dashboard extends VBox
 {
     private Label speedDisplay;
     private Label accelerationDisplay;
+    private long buttonPressBegin = -1;
 
     public Dashboard(double spacing, SimulationWorker simulationWorker)
     {
@@ -176,7 +177,7 @@ public class Dashboard extends VBox
             speedInput.clear();
         });
         Button brake = new Button("Brake");
-        brake.setOnAction((event) ->
+        /*brake.setOnAction((event) ->
         {
             if(simulationWorker.isAlive())
             {
@@ -187,6 +188,17 @@ public class Dashboard extends VBox
                 String message = "Error: Simulation is not running";
                 new ErrorDialog(Alert.AlertType.ERROR,message);
             }
+        });*/
+        brake.pressedProperty().addListener((observable, wasPressed, pressed) -> {
+           if(pressed) buttonPressBegin = System.currentTimeMillis();
+           else
+           {
+               if((System.currentTimeMillis()-buttonPressBegin)<2000){
+                   Car.engageBrakesShortPress();
+                   System.out.println("button pressed for short time");
+               }
+               buttonPressBegin = -1;
+           }
         });
         simulationControl.getChildren().addAll(start,stop,reset,brake);
         simulationControl.setAlignment(Pos.CENTER);
@@ -195,7 +207,15 @@ public class Dashboard extends VBox
         AnimationTimer animationTimer = new AnimationTimer() {
       @Override
       public void handle(long now) {
-        updateLabels();
+          if(buttonPressBegin!=-1)
+          {
+              long elapsedTime = System.currentTimeMillis() - buttonPressBegin;
+              if(elapsedTime>2000 && simulationWorker.isAlive()) {
+                  Car.engageBrakesLongPress();
+                  System.out.println("button pressed for long time");
+              }
+          }
+          updateLabels();
       }
     };
         animationTimer.start();
