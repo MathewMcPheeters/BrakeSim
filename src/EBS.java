@@ -8,22 +8,25 @@ public class EBS extends Thread
     private boolean running = true;
     private boolean braking = false;
     private volatile SimpleBooleanProperty trigger;
+    private BrakeTimer timer;
     public void engageBrakes()
     {
-      trigger.setValue(true);
+        trigger.setValue(true);
     }
     public void disengageBrakes()
     {
         trigger.setValue(false);
+        if(timer != null) timer.cancel();
     }
     public void terminate()
     {
-      terminate = true;
+        terminate = true;
     }
     public void setRunning(boolean run)
     {
-      running = run;
+        running = run;
     }
+
     public EBS()
     {
         trigger = new SimpleBooleanProperty(false);
@@ -37,47 +40,44 @@ public class EBS extends Thread
             {
                 if(trigger.getValue() == true)
                 {
-                    System.out.println("Thread is running.....");
                     if(!braking)
                     {
                         braking = true;
-                        System.out.println("Braking mechanism is engaging");
                         double currentVelocity = Car.getXVelocity();
                         double pressure = 0;
-                        //Braking policy goes here
                         if(currentVelocity <= 10)
                         {
-                            pressure = 5;
+                            pressure = 5000;
                         }
                         else if(currentVelocity > 10 && currentVelocity <= 20)
                         {
-                            pressure = 0.07;
+                            pressure = 10000;
                         }
                         else if(currentVelocity > 20 && currentVelocity <= 30)
                         {
-                            pressure = 0.09;
+                            pressure = 18000;
                         }
                         else if(currentVelocity > 30 && currentVelocity <= 40)
                         {
-                            pressure = 0.1;
+                            pressure = 23000;
                         }
                         else if(currentVelocity > 40 && currentVelocity <= 50)
                         {
-                            pressure = 0.13;
+                            pressure = 26000;
                         }
                         else if(currentVelocity > 50.0 && currentVelocity <= 60)
                         {
-                            pressure = 0.16;
+                            pressure = 36000;
                         }
                         else if(currentVelocity > 60.0 && currentVelocity <= 80)
                         {
-                            pressure = 20.0;
+                            pressure = 38000;
                         }
                         else if(currentVelocity > 80.0)
                         {
-                            pressure = 23.0;
+                            pressure = 44000;
                         }
-                        BrakeTimer timer = new BrakeTimer(pressure);
+                        timer = new BrakeTimer(pressure);
                         timer.runBrakeTask();
                         trigger.setValue(false);
                     }
@@ -107,16 +107,15 @@ public class EBS extends Thread
                 @Override
                 public void run()
                 {
-                    System.out.println("Car X Velocity: "+Car.getXVelocity());
                     if(Car.getXVelocity()<= 0)
                     {
-                          Car.setTorque(0);
+                          Car.setBrakeTorque(0);
                           pressure = 0;
+                          braking = false;
                           cancel();
                     }
-                    double currentTorque = Car.getTorque();
-                    System.out.println("CURRENT TORQUE: "+currentTorque);
-                    Car.setTorque(currentTorque + pressure);
+                    double currentTorque = Car.getBrakeTorque();
+                    Car.setBrakeTorque(currentTorque + pressure);
                 }
             },0,1000);
         }

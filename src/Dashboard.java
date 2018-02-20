@@ -45,7 +45,6 @@ public class Dashboard extends VBox
                 {
                     double speed = Double.parseDouble(speedText);
                     Car.setV_xC(speed);
-                    System.out.println("Speed is " + speed);
                 }
                 catch(NumberFormatException e)
                 {
@@ -75,11 +74,10 @@ public class Dashboard extends VBox
                 {
                     double acceleration = Double.parseDouble(accelerationText);
                     Car.setAccelerationTorque(acceleration);
-                    System.out.println("Acceleration is: "+acceleration);
                 }
                 catch(NumberFormatException e)
                 {
-                    System.out.println("Invalid input acceleration");
+                    new ErrorDialog(Alert.AlertType.ERROR,"Invalid Input Acceleration");
                 }
             }
         });
@@ -163,12 +161,10 @@ public class Dashboard extends VBox
         Button reset = new Button("Reset");
         reset.setOnAction((event) ->
         {
-
             if(simulationWorker.isAlive())
             {
                 simulationWorker.setRunning(false);
             }
-            for(int i = 0;i<150;i++){System.out.println("RESETTING.........");}
             Car.getBrakeSystem().disengageBrakes();
             Car.resetVariables();
             Car.setVariablesRollingContact();
@@ -182,7 +178,6 @@ public class Dashboard extends VBox
         {
             if(simulationWorker.isAlive())
             {
-                System.out.println("Here we go..........");
                 Car.engageBrakes();
             }
             else

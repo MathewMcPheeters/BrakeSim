@@ -85,15 +85,17 @@ public class Car
         accelerationTorque = newAccelerationTorque;
         T = brakeTorque-accelerationTorque;
     }
-    public static void setBrakeTorque(double newBrakeTorque){
+    public static void setBrakeTorque(double newBrakeTorque)
+    {
         brakeTorque = newBrakeTorque;
         T = brakeTorque-accelerationTorque;
     }
-    public static void engageBrakes(){
-        setBrakeTorque(5000.0);
+    public static void engageBrakes()
+    {
         brakeSystem.engageBrakes();
     }
-    public static void disengageBrakes(){
+    public static void disengageBrakes()
+    {
         setBrakeTorque(0.0);
         brakeSystem.disengageBrakes();
     }
@@ -106,17 +108,9 @@ public class Car
     {
         return gear;
     }
-    public static SimpleBooleanProperty getVelocityChange()
-    {
-        return velocityChange;
-    }
-    public static SimpleBooleanProperty getAccelerationChange()
-    {
-        return accelerationChange;
-    }
     private static EBS brakeSystem;
-    public static void setEBSSystem(EBS system){brakeSystem = system;}
     public static EBS getBrakeSystem(){return brakeSystem;}
+    public static double getBrakeTorque(){return brakeTorque;}
 
     static
     {
