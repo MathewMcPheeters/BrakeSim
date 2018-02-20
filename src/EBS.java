@@ -104,6 +104,7 @@ public class EBS extends Thread
     private class BrakeTimer extends Timer
     {
         private double pressure;
+        private boolean signFlip = false;
         public BrakeTimer(Double pressure)
         {
             this.pressure = pressure;
@@ -115,15 +116,24 @@ public class EBS extends Thread
                 @Override
                 public void run()
                 {
-                    if(Car.getXVelocity()<= 0)
+                    if(Car.getXVelocity()== 0)
                     {
                         Car.setBrakeTorque(0);
                         pressure = 0;
                         braking = false;
                         cancel();
                     }
+                    if(Car.getXVelocity()< 0 && signFlip == false)
+                    {
+                        System.out.println("Flipping pressure");
+                        pressure *= -1;
+                        signFlip = true;
+                    }
                     double currentTorque = Car.getBrakeTorque();
                     Car.setBrakeTorque(currentTorque + pressure);
+                    System.out.println(Car.getBrakeTorque());
+                    System.out.println(Car.getXVelocity());
+                    System.out.println();
                 }
             },0,1000);
         }

@@ -134,6 +134,8 @@ public class Dashboard extends VBox
                 return;
                 }
                 simulationWorker.resetLastTick(); // For smoothly re-starting a simulation that was stopped.
+                Car.setVariablesRollingContact();
+                simulationWorker.resetLastTick();
                 if (!simulationWorker.isAlive())
                 {
                     simulationWorker.start();
