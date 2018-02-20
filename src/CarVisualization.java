@@ -57,7 +57,7 @@ import java.lang.Math;
       ((Shape) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStroke( Color.WHITE );
       ((Shape) this.components.get( ComponentNames.CENTER_OF_MASS )).setFill( Color.RED );
     }
-    double k = 0;
+
     public void update()
     {
       // Draw the center of mass at (draw_cx, draw_cy).
