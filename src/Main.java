@@ -27,6 +27,7 @@ public class Main extends Application
         dashboard.setAlignment(Pos.CENTER);
         dashboard.setPadding(new Insets(10,10,10,10));
 
+
         root.setCenter(simulationArea);
         root.setLeft(dashboard);
 
@@ -36,15 +37,9 @@ public class Main extends Application
             @Override
             public void handle(WindowEvent event)
             {
-                simulationWorker.setRunning(false);
-                simulationWorker.terminate();
-                while(simulationWorker.isAlive()){}
-                if(Car.getBrakeSystem() != null)
-                {
-                    Car.getBrakeSystem().setRunning(false);
-                    Car.getBrakeSystem().terminate();
-                    while(Car.getBrakeSystem().isAlive()){}
-                }
+          //      simulationWorker.setRunning(false);
+            //    simulationWorker.terminate();
+              //  while(simulationWorker.isAlive()){}
             }
         });
         primaryStage.setScene(scene);

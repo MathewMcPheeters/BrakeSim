@@ -1,4 +1,3 @@
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
 
 import static java.lang.Math.cos;
@@ -52,8 +51,6 @@ public class Car
     // Duplicate variables (Todo: these need to be collapsed into other variables or removed):
     public static double rear_theta = 0;
     public static double front_theta = 0;
-    private static SimpleBooleanProperty velocityChange = new SimpleBooleanProperty(false);
-    private static SimpleBooleanProperty accelerationChange = new SimpleBooleanProperty(false);
 
     // Variables regarding the environment
     private static double accelerationTorque = 0.0; // Torque due to pressing the accelerator (N-m)
@@ -61,7 +58,6 @@ public class Car
     private static double T = 0.0; // Combined torque applied by the brakes and the gas pedal (N-m)
 
     // Setters
-    public static void setTorque(double torque){T = torque;}
     public static void setGear(Gear newGear){
         gear = newGear;
     }
@@ -119,7 +115,6 @@ public class Car
     static
     {
         brakeSystem = new EBS();
-        brakeSystem.start();
     }
 
     /**
@@ -144,8 +139,6 @@ public class Car
         w_F = 0.0;
         rear_theta = 0;
         front_theta = 0;
-        velocityChange = new SimpleBooleanProperty(false);
-        accelerationChange = new SimpleBooleanProperty(false);
     }
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition()

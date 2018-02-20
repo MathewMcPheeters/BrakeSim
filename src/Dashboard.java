@@ -19,6 +19,13 @@ public class Dashboard extends VBox
     private Label accelerationDisplay;
     private long buttonPressBegin = -1;
 
+    public void resetSimulation(SimulationWorker worker, SimulationArea area)
+    {
+        area = new SimulationArea();
+        worker = new SimulationWorker();
+        worker.resetLastTick();
+    }
+
     public Dashboard(double spacing, SimulationWorker simulationWorker)
     {
         super(spacing);
@@ -49,14 +56,13 @@ public class Dashboard extends VBox
                 }
                 catch(NumberFormatException e)
                 {
-                    System.out.println("Invalid input speed");
+                    new ErrorDialog(Alert.AlertType.ERROR,"Invalid input speed");
                 }
             }
         });
         Label milesPerHour = new Label("m/s");
         speed.setAlignment(Pos.CENTER);
         speed.getChildren().addAll(speedLabel,speedInput,milesPerHour,enterSpeed);
-
 
         // Note: we *CAN* change the acceleration in the middle of the simulation.
         HBox acceleration = new HBox(5);
@@ -85,6 +91,7 @@ public class Dashboard extends VBox
         Label milesPerHourSquared = new Label("N-m");
         acceleration.setAlignment(Pos.CENTER);
         acceleration.getChildren().addAll(accelerationLabel,accelerationInput,milesPerHourSquared,enterAcceleration);
+
 
         HBox gear = new HBox(10);
         Label gearLabel = new Label("Gear:");
@@ -120,23 +127,38 @@ public class Dashboard extends VBox
         Button start = new Button("Start");
         start.setOnAction((event ->
         {
+            Car.printCarStats();
             if(Car.getGear() == null)
             {
                 new ErrorDialog(Alert.AlertType.ERROR,"Please Select a gear for the car");
+                return;
+            }
+            if(Car.getAccelerationTorque() == 0.0 && Car.getXVelocity() == 0.0)
+            {
+                if(Car.getGear() != Gear.NEUTRAL && Car.getGear() != Gear.PARK)
+                {
+                    String message = "Error: Acceleration and/or speed must be nonzero if "+
+                            "starting gear is Drive or Reverse";
+                    new ErrorDialog(Alert.AlertType.ERROR,message);
+                    return;
+                }
+                else
+                {
+                    System.out.println("We entered this block of code");
+                }
                 return;
             }
             if(Car.getAccelerationTorque() != 0 || Car.getXVelocity() != 0)
             {
                 if(Car.getGear() == Gear.NEUTRAL || Car.getGear() == Gear.PARK)
                 {
-                    String message = "Error: Acceleration and/or speed cannot be nonzero if "+
+                    String message = "Error: Acceleration and speed must be zero if "+
                                      "starting gear is Park or Neutral";
                 new ErrorDialog(Alert.AlertType.ERROR,message);
                 return;
                 }
                 simulationWorker.resetLastTick(); // For smoothly re-starting a simulation that was stopped.
                 Car.setVariablesRollingContact();
-                simulationWorker.resetLastTick();
                 if (!simulationWorker.isAlive())
                 {
                     simulationWorker.start();
@@ -172,7 +194,7 @@ public class Dashboard extends VBox
             Car.resetVariables();
             Car.setVariablesRollingContact();
             simulationWorker.resetLastTick();
-
+            resetSimulation(simulationWorker,simulationWorker.getSimulationArea());
             accelerationInput.clear();
             speedInput.clear();
         });
@@ -204,6 +226,7 @@ public class Dashboard extends VBox
         simulationControl.setAlignment(Pos.CENTER);
         getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
 
+        //This runs on the application thread, no need to get rid of it.
         AnimationTimer animationTimer = new AnimationTimer() {
       @Override
       public void handle(long now) {
