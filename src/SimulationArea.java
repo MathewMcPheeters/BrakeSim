@@ -1,14 +1,7 @@
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +30,7 @@ public class SimulationArea extends Pane {
       }
     }
 
-    public SimulationArea(){
+  public SimulationArea(){
 
         for (int i = 0; i < 6; i++)
         {
@@ -54,8 +47,6 @@ public class SimulationArea extends Pane {
         this.getChildren().add( carVis.components.get( CarVisualization.ComponentNames.REAR_WHEEL_LINE ));
         this.getChildren().add( carVis.components.get( CarVisualization.ComponentNames.FRONT_WHEEL_LINE ));
         this.getChildren().add( carVis.components.get( CarVisualization.ComponentNames.CENTER_OF_MASS ));
-
-
     }
 
 

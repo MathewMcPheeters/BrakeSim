@@ -1,4 +1,7 @@
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import java.util.HashMap;
@@ -7,7 +10,7 @@ import javafx.scene.shape.Ellipse;
 import java.lang.Math;
 
   /*
-    Consists of a HashMap of shapes indexed by an enumeration.
+    Consists of a HashMap of nodes indexed by an enumeration.
     update() looks at the state of Car.java to determine how to draw the system.
     The components are then rendered within SimulationArea.
    */
@@ -17,7 +20,7 @@ import java.lang.Math;
     private final double wheelRadius = Car.R*m_to_px; // pixels
     private final double draw_cx = 295; // pixel coordinates
     private final double draw_cy = 265; // pixel coordinates
-    public HashMap<ComponentNames, Shape> components;
+    public HashMap<ComponentNames, Node> components;
     public enum ComponentNames
     {
       CHASSIS,
@@ -34,7 +37,12 @@ import java.lang.Math;
       components = new HashMap<>();
 
       // Add all components.
-      this.components.put(ComponentNames.CHASSIS, new Line(0,0,0,0));
+      ImageView selectedImage = new ImageView();
+      Image image1 = new Image("car_img.png");
+      selectedImage.setImage(image1);
+      selectedImage.relocate(235,242);
+
+      this.components.put(ComponentNames.CHASSIS, selectedImage);
       this.components.put(ComponentNames.REAR_WHEEL, new Ellipse(0,0,wheelRadius,wheelRadius));
       this.components.put(ComponentNames.FRONT_WHEEL, new Ellipse(0,0,wheelRadius,wheelRadius));
       this.components.put(ComponentNames.REAR_WHEEL_LINE, new Line(0,0,0,0));
@@ -43,27 +51,23 @@ import java.lang.Math;
       this.update(); // Fix the positions of each component.
 
       // Color all components appropriately.
-      this.components.get( ComponentNames.CHASSIS ).setFill( Color.BLACK );
-      this.components.get( ComponentNames.REAR_WHEEL ).setFill( Color.WHITE );
-      this.components.get( ComponentNames.FRONT_WHEEL ).setFill( Color.WHITE );
-      this.components.get( ComponentNames.REAR_WHEEL_LINE ).setFill( Color.BLACK );
-      this.components.get( ComponentNames.FRONT_WHEEL_LINE ).setFill( Color.BLACK );
-      this.components.get( ComponentNames.CENTER_OF_MASS ).setFill( Color.YELLOW );
-
-      // Set styles appropriately
-      this.components.get( ComponentNames.CHASSIS ).setStyle("-fx-stroke-width: 3;");
-
+      ((Shape) this.components.get( ComponentNames.REAR_WHEEL )).setFill( Color.BLACK );
+      ((Shape) this.components.get( ComponentNames.FRONT_WHEEL )).setFill( Color.BLACK );
+      ((Shape) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStroke( Color.WHITE );
+      ((Shape) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStroke( Color.WHITE );
+      ((Shape) this.components.get( ComponentNames.CENTER_OF_MASS )).setFill( Color.RED );
     }
-
+    double k = 0;
     public void update()
     {
-      //System.out.println(Car.getXVelocity());
-
-      // Draw the center of mass at (draw_cx, draw_cy)
-      double cx_offset = Car.x_C*m_to_px - draw_cx; // offsets between the car's actual position and where it is drawn on the screen
+      // Draw the center of mass at (draw_cx, draw_cy).
+      // Offsets between the car's actual position and where it is drawn on the screen
+      double cx_offset = Car.x_C*m_to_px - draw_cx;
       double cy_offset = -Car.y_C*m_to_px - draw_cy;
 
       double theta_C = Car.theta_C;
+      this.components.get( ComponentNames.CHASSIS ).setRotate(Math.toDegrees(theta_C));
+
       //double front_theta = Car.rear_theta;
       //double rear_theta = Car.front_theta;
       double front_theta = Car.theta_F;
@@ -83,10 +87,6 @@ import java.lang.Math;
       // Set the location for the center of mass visual and the width for the chassis line.
       this.components.get( ComponentNames.REAR_WHEEL ).relocate(rotated_x-wheelRadius, rotated_y-wheelRadius);
 
-      // Set the position of the rear wheel.
-      ((Line) this.components.get( ComponentNames.CHASSIS )).setStartX( rotated_x);
-      ((Line) this.components.get( ComponentNames.CHASSIS )).setStartY( rotated_y);
-
       // Set the position for the rear wheel-line, which indicates the direction the rear wheel.
       ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStartX( rotated_x);
       ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStartY( rotated_y);
@@ -102,11 +102,7 @@ import java.lang.Math;
       rotated_x = frontWheelPos.getX()*m_to_px - cx_offset;
       rotated_y = frontWheelPos.getY()*m_to_px - cy_offset;
 
-
-      // Set the position of the front wheel.
       this.components.get( ComponentNames.FRONT_WHEEL ).relocate(rotated_x-wheelRadius, rotated_y-wheelRadius);
-      ((Line) this.components.get( ComponentNames.CHASSIS )).setEndX( rotated_x);
-      ((Line) this.components.get( ComponentNames.CHASSIS )).setEndY( rotated_y);
 
       // Set the position for the front wheel-line, which indicates the direction the front wheel.
       ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStartX( rotated_x);
