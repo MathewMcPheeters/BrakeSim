@@ -92,6 +92,7 @@ public class EBS extends Thread
                 e.printStackTrace();
             }
         }
+        if(timer != null) timer.cancel();
     }
     private class BrakeTimer extends Timer
     {
