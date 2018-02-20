@@ -19,7 +19,6 @@ public class SimulationWorker extends Thread
     running = b;
   }
     private SimulationArea simulationArea = null;
-    private Dashboard dashboard;
     public void resetLastTick(){
     lastTick = System.currentTimeMillis();
   }
@@ -76,7 +75,6 @@ public class SimulationWorker extends Thread
     public void setSimulationArea(SimulationArea area)
     {
         simulationArea = area;
-        this.dashboard = dashboard;
     }
 
     public SimulationArea getSimulationArea(){

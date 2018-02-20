@@ -83,6 +83,7 @@ public class EBS extends Thread
                     }
                 }
             }
+            if(timer != null) timer.cancel();
             try
             {
                 Thread.sleep(500);
@@ -110,10 +111,10 @@ public class EBS extends Thread
                 {
                     if(Car.getXVelocity()<= 0)
                     {
-                          Car.setBrakeTorque(0);
-                          pressure = 0;
-                          braking = false;
-                          cancel();
+                        Car.setBrakeTorque(0);
+                        pressure = 0;
+                        braking = false;
+                        cancel();
                     }
                     double currentTorque = Car.getBrakeTorque();
                     Car.setBrakeTorque(currentTorque + pressure);
