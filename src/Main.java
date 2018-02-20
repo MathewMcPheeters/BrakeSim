@@ -6,7 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
+/**
+ * This class is the entry point for the BrakeSim application. It should be
+ * called with no arguments.
+ */
 public class Main extends Application
 {
     @Override
@@ -36,21 +39,18 @@ public class Main extends Application
                 simulationWorker.setRunning(false);
                 simulationWorker.terminate();
                 while(simulationWorker.isAlive()){}
-                System.out.println("Simulation Worker has terminated");
                 if(Car.getBrakeSystem() != null)
                 {
                     Car.getBrakeSystem().setRunning(false);
                     Car.getBrakeSystem().terminate();
                     while(Car.getBrakeSystem().isAlive()){}
                 }
-                System.out.println("Brake System has terminated");
             }
         });
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-  public static void main(String[] args)
+    public static void main(String[] args)
     {
         launch(args);
     }

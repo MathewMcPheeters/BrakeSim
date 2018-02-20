@@ -8,14 +8,13 @@ import java.util.HashMap;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import java.lang.Math;
-
-  /*
-    Consists of a HashMap of nodes indexed by an enumeration.
-    update() looks at the state of Car.java to determine how to draw the system.
-    The components are then rendered within SimulationArea.
-   */
-  public class CarVisualization
-  {
+/**
+  Consists of a HashMap of nodes indexed by an enumeration.
+  update() looks at the state of Car.java to determine how to draw the system.
+  The components are then rendered within SimulationArea.
+ */
+public class CarVisualization
+{
     private final double m_to_px = 12.5; // Conversion ratio between meters and pixels
     private final double wheelRadius = Car.R*m_to_px; // pixels
     private final double draw_cx = 295; // pixel coordinates
@@ -110,4 +109,4 @@ import java.lang.Math;
       ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndX( rotated_x + Math.cos(theta_C+front_theta+Math.PI/2)*wheelRadius );
       ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+front_theta+Math.PI/2)*wheelRadius );
     }
-  }
+}

@@ -2,6 +2,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * James Perry
+ * CS 351
+ * This class contains the Emergency Braking System logic. It runs on it's own
+ * thread, and gets signalled to engage the braking mechanism by Dashboard.java
+ */
 public class EBS extends Thread
 {
     private boolean terminate = false;
