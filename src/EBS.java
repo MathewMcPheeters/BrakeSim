@@ -7,7 +7,7 @@ public class EBS extends Thread
     private boolean terminate = false;
     private boolean running = true;
     private boolean braking = false;
-    private volatile SimpleBooleanProperty trigger = new SimpleBooleanProperty();
+    private volatile SimpleBooleanProperty trigger;
     public void engageBrakes()
     {
       trigger.setValue(true);
@@ -45,23 +45,23 @@ public class EBS extends Thread
                         double currentVelocity = Car.getXVelocity();
                         double pressure = 0;
                         //Braking policy goes here
-                        if(currentVelocity <= 0.1)
+                        if(currentVelocity <= 10)
                         {
-                            pressure = 0.05;
+                            pressure = 5;
                         }
-                        else if(currentVelocity > 0.1 && currentVelocity <= 0.2)
+                        else if(currentVelocity > 10 && currentVelocity <= 20)
                         {
                             pressure = 0.07;
                         }
-                        else if(currentVelocity > 0.2 && currentVelocity <= 0.3)
+                        else if(currentVelocity > 20 && currentVelocity <= 30)
                         {
                             pressure = 0.09;
                         }
-                        else if(currentVelocity > 0.3 && currentVelocity <= 0.4)
+                        else if(currentVelocity > 30 && currentVelocity <= 40)
                         {
                             pressure = 0.1;
                         }
-                        else if(currentVelocity > 0.4 && currentVelocity <= 0.5)
+                        else if(currentVelocity > 40 && currentVelocity <= 50)
                         {
                             pressure = 0.13;
                         }
@@ -81,10 +81,6 @@ public class EBS extends Thread
                         timer.runBrakeTask();
                         trigger.setValue(false);
                     }
-                }
-                else
-                {
-                 // System.out.println("Brake Trigger is False");
                 }
             }
             try
@@ -114,11 +110,10 @@ public class EBS extends Thread
                     System.out.println("Car X Velocity: "+Car.getXVelocity());
                     if(Car.getXVelocity()<= 0)
                     {
-                      Car.setTorque(0);
-                      pressure = 0;
-                      cancel();
+                          Car.setTorque(0);
+                          pressure = 0;
+                          cancel();
                     }
-
                     double currentTorque = Car.getTorque();
                     System.out.println("CURRENT TORQUE: "+currentTorque);
                     Car.setTorque(currentTorque + pressure);

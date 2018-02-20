@@ -31,7 +31,7 @@ import java.lang.Math;
       CENTER_OF_MASS,
     }
 
-    public CarVisualization ( )
+    public CarVisualization()
     {
       // Initialize the map of components.
       components = new HashMap<>();
