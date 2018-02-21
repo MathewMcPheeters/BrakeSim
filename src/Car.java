@@ -9,6 +9,8 @@ import static java.lang.Math.sin;
  */
 public class Car
 {
+    public static double stopping_distance = 0;
+
     private static Gear gear;
     private static final double m_to_px = 12.5;
 
@@ -98,6 +100,7 @@ public class Car
     }
     public static void resetVariables()
     {
+        stopping_distance = 0;
         x_C = 5;
         y_C = 0.49;
         theta_C = 0.0;

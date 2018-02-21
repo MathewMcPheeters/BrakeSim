@@ -35,7 +35,7 @@ public class Main extends Application
 
     this.dashboard = new Dashboard(10,timeline);
     dashboard.setAlignment(Pos.CENTER);
-    dashboard.setPadding(new Insets(10,10,10,10));
+    dashboard.setPadding(new Insets(-50,10,10,10));
     this.simulationArea = new SimulationArea();
 
     root.setPrefSize(window_width, window_height);
@@ -49,5 +49,7 @@ public class Main extends Application
 
   public void update() {
     simulationArea.update();
+    dashboard.updateLabels();
+    //System.out.println("updating...");
   }
 }

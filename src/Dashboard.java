@@ -17,6 +17,7 @@ public class Dashboard extends VBox
 {
   private Label speedDisplay;
   private Label accelerationDisplay;
+  private Label stopDistanceDisplay;
 
   public Dashboard(int spacing, Timeline timeLine)
   {
@@ -27,6 +28,9 @@ public class Dashboard extends VBox
 
     accelerationDisplay = new Label("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
+
+    stopDistanceDisplay = new Label("Stopping Distance: "+Car.stopping_distance+" m");
+    stopDistanceDisplay.setAlignment(Pos.CENTER_LEFT);
 
     // Note: We currently cannot change the velocity in the middle of the simulation; The wheel rotations will be wrong.
     HBox speed = new HBox(5);
@@ -210,17 +214,20 @@ public class Dashboard extends VBox
       if(timeLine.getStatus() == Animation.Status.RUNNING)
       {
         Car.engageBrakes();
+        Car.stopping_distance = 0;
       }
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
-    getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
+    getChildren().addAll(speedDisplay,accelerationDisplay,stopDistanceDisplay,speed,acceleration,gear,simulationControl);
   }
 
   public void updateLabels()
   {
-    accelerationDisplay.setText("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
-    speedDisplay.setText("Current Speed: "+ Car.getXVelocity()+" m/s");
+    accelerationDisplay.setText("Current Acceleration: "+Math.round(100*Car.getCurrentXCAcceleration())/100.0+" m/s^2");
+    speedDisplay.setText("Current Speed: "+ Math.round(100*Car.getXVelocity())/100.0+" m/s");
+    stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*Car.stopping_distance)/100.0+" m");
+
   }
 
   public class ErrorDialog extends Alert

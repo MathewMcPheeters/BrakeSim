@@ -90,6 +90,7 @@ public class EBS
             braking = false;
             cancel();
           }
+          Car.stopping_distance+=Math.abs(Car.getXVelocity());
           double currentTorque = Car.getBrakeTorque();
           Car.setBrakeTorque(currentTorque + pressure);
           System.out.println("Applying Pressure");
