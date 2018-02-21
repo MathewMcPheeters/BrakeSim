@@ -24,7 +24,10 @@ public class Main extends Application
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
 
-    this.dashboard = new Dashboard(10);
+    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
+    timeline.setCycleCount(Animation.INDEFINITE);
+
+    this.dashboard = new Dashboard(10,timeline);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(10,10,10,10));
     this.simulationArea = new SimulationArea();
@@ -33,9 +36,7 @@ public class Main extends Application
     root.setCenter(simulationArea);
     root.setLeft(dashboard);
 
-    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
-    timeline.setCycleCount(Animation.INDEFINITE);
-    timeline.play();
+    //timeline.play();
 
     Scene scene = new Scene(root);
     stage.setScene(scene);
