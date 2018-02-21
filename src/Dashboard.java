@@ -165,8 +165,10 @@ public class Dashboard extends VBox
       }
       if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
       {
+
         if(Car.getGear() == Gear.REVERSE)
         {
+            System.out.println(Car.getXVelocity());
             if(Car.getXVelocity() > 0)
             {
                 Car.setV_xC(Car.getXVelocity()*-1);
@@ -179,6 +181,7 @@ public class Dashboard extends VBox
                 Car.setV_xC(Car.getXVelocity()*-1);
             }
         }
+        System.out.println("Hello");
         timeLine.play();
       }
       else
