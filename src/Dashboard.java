@@ -200,6 +200,7 @@ public class Dashboard extends VBox
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
     {
+      stop.fire();
       Car.resetVariables();
       updateLabels();
     });

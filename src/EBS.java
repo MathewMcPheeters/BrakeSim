@@ -92,6 +92,8 @@ public class EBS
           }
           double currentTorque = Car.getBrakeTorque();
           Car.setBrakeTorque(currentTorque + pressure);
+          System.out.println("Applying Pressure");
+          System.out.println(Car.getXVelocity());
         }
       },0,1000);
     }
