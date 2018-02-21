@@ -5,6 +5,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Alert;
 
 public class DashboardTwo extends VBox
 {
@@ -183,4 +184,16 @@ public class DashboardTwo extends VBox
         getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
     }
 
+
+    public class ErrorDialog extends Alert
+    {
+        public ErrorDialog(Alert.AlertType type,String message)
+        {
+            super(type);
+            setContentText(message);
+            showAndWait();
+        }
+    }
+
 }
+
