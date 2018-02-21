@@ -14,6 +14,7 @@ public class Dashboard extends VBox
 {
   private Label speedDisplay;
   private Label accelerationDisplay;
+
   public Dashboard(int spacing, Timeline timeLine)
   {
     super(spacing);
@@ -164,6 +165,20 @@ public class Dashboard extends VBox
       }
       if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
       {
+        if(Car.getGear() == Gear.REVERSE)
+        {
+            if(Car.getXVelocity() > 0)
+            {
+                Car.setV_xC(Car.getXVelocity()*-1);
+            }
+        }
+        else if(Car.getGear() == Gear.DRIVE)
+        {
+            if(Car.getXVelocity() < 0)
+            {
+                Car.setV_xC(Car.getXVelocity()*-1);
+            }
+        }
         timeLine.play();
       }
       else
