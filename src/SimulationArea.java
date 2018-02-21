@@ -27,12 +27,14 @@ public class SimulationArea extends Pane
     carVisualization.addComponents( this );
   }
 
-  void update(double deltaX)
+  void update()
   {
-    // Update the environment, graphs, and physical model.
-    for (int i  = 0; i < dashes.size(); i++)
+    Car.step(16); // Update the physical model.
+    carVisualization.update(); // Update the visualization.
+    for (int i  = 0; i < dashes.size(); i++) // Update the dashes.
     {
-      dashes.get(i).setX((dashes.get(i).getX()-deltaX*m_to_px)%600);
+      // AWG: I took out 'deltaX' and put in getXVelocity...seems weird to just pass in this one parameter.
+      dashes.get(i).setX((dashes.get(i).getX()-Car.getXVelocity()*m_to_px)%600);
       if  (dashes.get(i).getX() < 0)
         dashes.get(i).setX(600+dashes.get(i).getX());
     }

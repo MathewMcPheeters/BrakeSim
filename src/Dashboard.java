@@ -174,7 +174,7 @@ public class Dashboard extends VBox
     Button stop = new Button("Stop");
     stop.setOnAction((event ->
     {
-
+      timeLine.pause();
     }));
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
