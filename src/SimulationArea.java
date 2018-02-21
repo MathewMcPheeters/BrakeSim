@@ -23,7 +23,7 @@ public class SimulationArea extends Pane
     this.setBackground(new Background(backgroundImage));
     for (int i = 0; i < 6; i++) // Add the dashes to the scene.
     {
-      dashes.add(dashes.size(), new Rectangle( i * 100, 280, 30, 3));
+      dashes.add(dashes.size(), new Rectangle( i * 9.15*m_to_px, 280, 3.048*m_to_px, 3));
       dashes.get(dashes.size()-1).setFill(Color.WHITE);
     }
     this.getChildren().addAll(dashes);
