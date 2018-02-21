@@ -59,14 +59,11 @@ public class Car
         brakeTorque = newBrakeTorque;
         T = brakeTorque-accelerationTorque;
     }
-    public static void engageBrakesLongPress()
+    public static void engageBrakes()
     {
         brakeSystem.engageBrakes();
     }
-    public static void engageBrakesShortPress()
-    {
-        brakeSystem.engageBrakes();
-    }
+
     public static void disengageBrakes()
     {
         setBrakeTorque(0.0);

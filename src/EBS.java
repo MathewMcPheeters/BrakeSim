@@ -1,11 +1,11 @@
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.animation.AnimationTimer;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
  * James Perry
- * CS 351
+ * CS 460
  * This class contains the Emergency Braking System logic. It runs on it's own
  * thread, and gets signalled to engage the braking mechanism by Dashboard.java
  */
@@ -59,18 +59,27 @@ public class EBS
         pressure = 44000;
       }
       timer = new BrakeTimer(pressure);
-      timer.runBrakeTask();
+      //timer.runBrakeTask();
     }
   }
   //Need to delete this
-  private class BrakeTimer extends Timer
+  private class BrakeTimer extends AnimationTimer
   {
+
     private double pressure;
     private boolean signFlip = false;
+    private long start;
     public BrakeTimer(Double pressure)
         {
             this.pressure = pressure;
         }
+
+    @Override
+    public void handle(long now)
+    {
+
+    }
+    /**
     public void runBrakeTask()
     {
       scheduleAtFixedRate(
@@ -97,4 +106,6 @@ public class EBS
             },0,1000);
       }
     }
+     **/
+  }
 }

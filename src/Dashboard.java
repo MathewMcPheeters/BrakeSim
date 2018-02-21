@@ -168,25 +168,24 @@ public class Dashboard extends VBox
 
         if(Car.getGear() == Gear.REVERSE)
         {
-            System.out.println(Car.getXVelocity());
-            if(Car.getXVelocity() > 0)
-            {
-                Car.setV_xC(Car.getXVelocity()*-1);
-            }
+          System.out.println(Car.getXVelocity());
+          if(Car.getXVelocity() > 0)
+          {
+            Car.setV_xC(Car.getXVelocity()*-1);
+          }
         }
         else if(Car.getGear() == Gear.DRIVE)
         {
-            if(Car.getXVelocity() < 0)
-            {
-                Car.setV_xC(Car.getXVelocity()*-1);
-            }
+          if(Car.getXVelocity() < 0)
+          {
+            Car.setV_xC(Car.getXVelocity()*-1);
+          }
         }
-        System.out.println("Hello");
         timeLine.play();
       }
       else
       {
-         new ErrorDialog(AlertType.ERROR,"Simulation is already running");
+        new ErrorDialog(AlertType.ERROR,"Simulation is already running");
       }
     }));
 
@@ -198,12 +197,16 @@ public class Dashboard extends VBox
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
     {
-        Car.resetVariables();
+      Car.resetVariables();
+      updateLabels();
     });
     Button brake = new Button("Brake");
     brake.setOnAction((event) ->
     {
-
+      if(timeLine.getStatus() == Animation.Status.RUNNING)
+      {
+        Car.engageBrakes();
+      }
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
