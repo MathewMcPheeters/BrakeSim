@@ -17,7 +17,10 @@ public class Main extends Application
   private Dashboard dashboard;
   private SimulationArea simulationArea;
 
-  public static void main(String[] args) {launch(args); }
+  public static void main(String[] args)
+  {
+    launch(args);
+  }
   @Override
   public void start(Stage stage)
   {
@@ -43,5 +46,6 @@ public class Main extends Application
 
   public void update() {
     simulationArea.update();
+    System.out.println("updating...");
   }
 }
