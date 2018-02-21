@@ -9,16 +9,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
 
+
 public class Dashboard extends VBox
 {
+  private Label speedDisplay;
+  private Label accelerationDisplay;
   public Dashboard(int spacing, Timeline timeLine)
   {
     super(spacing);
 
-    Label speedDisplay = new Label("Current Speed: "+ Car.getXVelocity()+" m/s");
+    speedDisplay = new Label("Current Speed: "+ Car.getXVelocity()+" m/s");
     speedDisplay.setAlignment(Pos.CENTER_LEFT);
 
-    Label accelerationDisplay = new Label("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
+    accelerationDisplay = new Label("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
 
     // Note: We currently cannot change the velocity in the middle of the simulation; The wheel rotations will be wrong.
@@ -133,6 +136,7 @@ public class Dashboard extends VBox
     Button start = new Button("Start");
     start.setOnAction((event ->
     {
+      //timeLine.play();
       if(Car.getGear() == null)
       {
         new ErrorDialog(AlertType.ERROR,"Please Select a gear for the car");
@@ -158,16 +162,13 @@ public class Dashboard extends VBox
           return;
         }
       }
+      if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
+      {
+        timeLine.play();
+      }
       else
       {
-        if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
-        {
-          timeLine.play();
-        }
-        else
-        {
-          new ErrorDialog(AlertType.ERROR,"Simulation is already running");
-        }
+         new ErrorDialog(AlertType.ERROR,"Simulation is already running");
       }
     }));
 
@@ -179,7 +180,7 @@ public class Dashboard extends VBox
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
     {
-
+        Car.resetVariables();
     });
     Button brake = new Button("Brake");
     brake.setOnAction((event) ->
@@ -189,6 +190,12 @@ public class Dashboard extends VBox
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
     getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
+  }
+
+  public void updateLabels()
+  {
+    accelerationDisplay.setText("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
+    speedDisplay.setText("Current Speed: "+ Car.getXVelocity()+" m/s");
   }
 
   public class ErrorDialog extends Alert
