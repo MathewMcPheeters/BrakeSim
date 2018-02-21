@@ -44,13 +44,15 @@ public class Dashboard extends VBox
           }
           else
           {
-            String message = "Speed cannot be negative";
+            String message = "Speed must be positive";
             new ErrorDialog(AlertType.ERROR,message);
+            speedInput.clear();
           }
         }
         catch(NumberFormatException e)
         {
           new ErrorDialog(AlertType.ERROR,"Invalid input speed");
+          speedInput.clear();
         }
       }
     });
@@ -82,11 +84,13 @@ public class Dashboard extends VBox
           {
             String message = "Acceleration must be positive";
             new ErrorDialog(AlertType.ERROR,message);
+            accelerationInput.clear();
           }
         }
         catch(NumberFormatException e)
         {
           new ErrorDialog(AlertType.ERROR,"Invalid Input Acceleration");
+          accelerationInput.clear();
         }
       }
     });
@@ -129,7 +133,6 @@ public class Dashboard extends VBox
     Button start = new Button("Start");
     start.setOnAction((event ->
     {
-      System.out.println("Start button was fired");
       if(Car.getGear() == null)
       {
         new ErrorDialog(AlertType.ERROR,"Please Select a gear for the car");
@@ -139,8 +142,18 @@ public class Dashboard extends VBox
       {
         if(Car.getAccelerationTorque() != 0 || Car.getXVelocity() != 0)
         {
-          String message = "Starting acceleration and speed must be zero if starting gear is"+
-                           "either Park or Neutral";
+          String message = "Starting acceleration and speed must be zero if starting gear is "+
+                           "Park or Neutral";
+          new ErrorDialog(AlertType.ERROR,message);
+          return;
+        }
+      }
+      if(Car.getGear() == Gear.DRIVE || Car.getGear() == Gear.REVERSE)
+      {
+        if(Car.getAccelerationTorque() == 0 && Car.getXVelocity() == 0)
+        {
+          String message = "Starting acceleration and speed cannot both be zero if starting gear is "+
+                           "either Drive or Reverse";
           new ErrorDialog(AlertType.ERROR,message);
           return;
         }
@@ -157,7 +170,6 @@ public class Dashboard extends VBox
         }
       }
     }));
-
 
     Button stop = new Button("Stop");
     stop.setOnAction((event ->
