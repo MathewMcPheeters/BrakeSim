@@ -30,10 +30,12 @@ public class Main extends Application
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
 
-    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
+    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
 
-    this.dashboard = new Dashboard(10,timeline);
+    EBS ebs = new EBS();
+
+    this.dashboard = new Dashboard(10,timeline, ebs);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(10,10,10,10));
     this.simulationArea = new SimulationArea();

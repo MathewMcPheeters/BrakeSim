@@ -1,3 +1,8 @@
+import static Car.CarConstants.*;
+
+import Car.CarConstants;
+import Car.CarPhysics;
+import Car.CarVariables;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -7,7 +12,6 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
-import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -18,9 +22,10 @@ import java.util.HashMap;
 public class CarVisualization
 {
     private final double m_to_px = 12.5; // Conversion ratio between meters and pixels
-    private final double wheelRadius = CarConstants.R*m_to_px; // pixels
+    private final double wheelRadius = CarConstants.getR()*m_to_px; // pixels
     private final double draw_cx = 295;
     private final double draw_cy = 265;
+    private final CarPhysics carPhysics;
 
     // For correcting an image's center of rotation.
     private final double chassis_px_offset_x =-64;
@@ -47,8 +52,10 @@ public class CarVisualization
       simulationArea.getChildren().add( this.components.get( ComponentNames.CENTER_OF_MASS ));
     }
 
-    CarVisualization()
+    CarVisualization(CarPhysics carPhysics)
     {
+      this.carPhysics = carPhysics;
+
       // Initialize the map of components.
       components = new HashMap<>();
 
@@ -83,22 +90,21 @@ public class CarVisualization
     {
       // Draw the center of mass at (draw_cx, draw_cy).
       // Offsets between the car's actual position and where it is drawn on the screen.
-      double cx_offset = Car.x_C*m_to_px - draw_cx;
-      double cy_offset = -Car.y_C*m_to_px - draw_cy;
+      double cx_offset = CarVariables.getX_C()*m_to_px - draw_cx;
+      double cy_offset = -CarVariables.getY_C()*m_to_px - draw_cy;
 
-      double theta_C = Car.theta_C;
+      double theta_C = CarVariables.getTheta_C();
       this.components.get( ComponentNames.CHASSIS ).setRotate(Math.toDegrees(theta_C));
       this.components.get(ComponentNames.CHASSIS).relocate( draw_cx + Math.cos(theta_C)* chassis_px_offset_x + Math.sin(theta_C)* chassis_px_offset_y,
                                                             draw_cy + Math.sin(theta_C)* chassis_px_offset_x + Math.cos(theta_C)* chassis_px_offset_y);
-      double front_theta = Car.theta_F;
-      double rear_theta = Car.theta_R;
+      double front_theta = CarVariables.getTheta_F();
+      double rear_theta = CarVariables.getTheta_R();
 
       this.components.get( ComponentNames.CENTER_OF_MASS ).relocate(draw_cx-5, draw_cy-5);
 
       // ----- [ REAR WHEEL ] --------------------------------------------------------------------------------------------
-      Point2D rearWheelPos = Car.getRearWheelPosition();
-      double rotated_x = rearWheelPos.getX()*m_to_px - cx_offset;
-      double rotated_y = rearWheelPos.getY()*m_to_px - cy_offset;
+      double rotated_x = carPhysics.getX_R()*m_to_px - cx_offset;
+      double rotated_y = carPhysics.getY_R()*m_to_px - cy_offset;
 
       // Set the location for the center of mass visual and the width for the chassis line.
       this.components.get( ComponentNames.REAR_WHEEL ).relocate(rotated_x-wheelRadius, rotated_y-wheelRadius);
@@ -110,9 +116,8 @@ public class CarVisualization
       ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+rear_theta+ Math.PI/2)*wheelRadius );
 
       // ----- [ FRONT WHEEL ] -------------------------------------------------------------------------------------------
-      Point2D frontWheelPos = Car.getFrontWheelPosition();
-      rotated_x = frontWheelPos.getX()*m_to_px - cx_offset;
-      rotated_y = frontWheelPos.getY()*m_to_px - cy_offset;
+      rotated_x = carPhysics.getX_F()*m_to_px - cx_offset;
+      rotated_y = carPhysics.getY_F()*m_to_px - cy_offset;
 
       this.components.get( ComponentNames.FRONT_WHEEL ).relocate(rotated_x-wheelRadius, rotated_y-wheelRadius);
 

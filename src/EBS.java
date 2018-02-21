@@ -1,11 +1,11 @@
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
+import Car.CarVariables;
+import Car.Gear;
 import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static java.lang.Math.abs;
 
 /**
  * James Perry
@@ -29,36 +29,36 @@ public class EBS
     if (!braking)
     {
       braking = true;
-      double currentVelocity = Car.getXVelocity();
-      if (currentVelocity <= 10)
+      double currentVelocity = CarVariables.getV_xC();
+      if (abs(currentVelocity) <= 10)
       {
         pressure = 5000.;
       }
-      else if (currentVelocity > 10 && currentVelocity <= 20)
+      else if (abs(currentVelocity) > 10 && abs(currentVelocity) <= 20)
       {
-        pressure = 10000.;
+          pressure = 10000.;
       }
-      else if (currentVelocity > 20 && currentVelocity <= 30)
+      else if (abs(currentVelocity) > 20 && abs(currentVelocity) <= 30)
       {
-        pressure = 18000.;
+          pressure = 18000.;
       }
-      else if (currentVelocity > 30 && currentVelocity <= 40)
+      else if (abs(currentVelocity) > 30 && abs(currentVelocity) <= 40)
       {
         pressure = 23000.;
       }
-      else if (currentVelocity > 40 && currentVelocity <= 50)
+      else if (abs(currentVelocity) > 40 && abs(currentVelocity) <= 50)
       {
         pressure = 26000.;
       }
-      else if (currentVelocity > 50.0 && currentVelocity <= 60)
+      else if (abs(currentVelocity) > 50.0 && abs(currentVelocity) <= 60)
       {
         pressure = 36000.;
       }
-      else if (currentVelocity > 60.0 && currentVelocity <= 80)
+      else if (abs(currentVelocity) > 60.0 && abs(currentVelocity) <= 80)
       {
         pressure = 38000.;
       }
-      else if (currentVelocity > 80.0)
+      else if (abs(currentVelocity) > 80.0)
       {
         pressure = 44000.;
       }
@@ -83,17 +83,20 @@ public class EBS
         @Override
         public void run()
         {
-          if(Car.getXVelocity()<= 0)
+          if(abs(CarVariables.getV_xC())<= 0)
           {
-            Car.setBrakeTorque(0);
+            //CarVariables.setBrakeTorque(0);
             pressure = 0;
             braking = false;
             cancel();
           }
-          double currentTorque = Car.getBrakeTorque();
-          Car.setBrakeTorque(currentTorque + pressure);
-          System.out.println("Applying Pressure");
-          System.out.println(Car.getXVelocity());
+          else{
+            double currentTorque = CarVariables.getBrakeTorque();
+            if(CarVariables.getGear()== Gear.DRIVE) CarVariables.setBrakeTorque(currentTorque + pressure);
+            else if(CarVariables.getGear()== Gear.REVERSE) CarVariables.setBrakeTorque(currentTorque - pressure);
+            System.out.println("Applying Pressure");
+            System.out.println(CarVariables.getV_xC());
+          }
         }
       },0,1000);
     }
