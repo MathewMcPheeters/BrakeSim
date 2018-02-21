@@ -1,3 +1,5 @@
+import javafx.animation.Animation;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -9,9 +11,7 @@ import javafx.scene.control.Alert;
 
 public class Dashboard extends VBox
 {
-
-
-  public Dashboard(int spacing)
+  public Dashboard(int spacing, Timeline timeLine)
   {
     super(spacing);
 
@@ -129,37 +129,32 @@ public class Dashboard extends VBox
     Button start = new Button("Start");
     start.setOnAction((event ->
     {
-      Main.timeline.play();
+      System.out.println("Start button was fired");
       if(Car.getGear() == null)
       {
         new ErrorDialog(AlertType.ERROR,"Please Select a gear for the car");
         return;
       }
-      if(Car.getAccelerationTorque() == 0.0 && Car.getXVelocity() == 0.0)
+      if(Car.getGear() == Gear.PARK || Car.getGear() == Gear.NEUTRAL)
       {
-        if(Car.getGear() != Gear.NEUTRAL && Car.getGear() != Gear.PARK)
+        if(Car.getAccelerationTorque() != 0 || Car.getXVelocity() != 0)
         {
-          String message = "Error: Acceleration and/or speed must be nonzero if "+
-                  "starting gear is Drive or Reverse";
-          new ErrorDialog(AlertType.ERROR,message);
-          return;
-        }
-        return;
-      }
-      if(Car.getAccelerationTorque() != 0 || Car.getXVelocity() != 0)
-      {
-        if(Car.getGear() == Gear.NEUTRAL || Car.getGear() == Gear.PARK)
-        {
-          String message = "Error: Acceleration and speed must be zero if "+
-                  "starting gear is Park or Neutral";
+          String message = "Starting acceleration and speed must be zero if starting gear is"+
+                           "either Park or Neutral";
           new ErrorDialog(AlertType.ERROR,message);
           return;
         }
       }
       else
       {
-        String message = "Please enter an acceleration and/or velocity";
-        new ErrorDialog(AlertType.ERROR,message);
+        if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
+        {
+          timeLine.play();
+        }
+        else
+        {
+          new ErrorDialog(AlertType.ERROR,"Simulation is already running");
+        }
       }
     }));
 
@@ -167,7 +162,7 @@ public class Dashboard extends VBox
     Button stop = new Button("Stop");
     stop.setOnAction((event ->
     {
-      Main.timeline.pause();
+
     }));
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
@@ -183,7 +178,6 @@ public class Dashboard extends VBox
     simulationControl.setAlignment(Pos.CENTER);
     getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
   }
-
 
   public class ErrorDialog extends Alert
   {
