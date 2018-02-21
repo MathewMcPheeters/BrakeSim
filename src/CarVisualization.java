@@ -2,12 +2,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
-import java.util.HashMap;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import java.lang.Math;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
+
+import java.util.HashMap;
+
 /**
   Consists of a HashMap of nodes indexed by an enumeration.
   update() looks at the state of Car.java to determine how to draw the system.
@@ -16,11 +17,17 @@ import java.lang.Math;
 public class CarVisualization
 {
     private final double m_to_px = 12.5; // Conversion ratio between meters and pixels
-    private final double wheelRadius = Car.R*m_to_px; // pixels
-    private final double draw_cx = 295; // pixel coordinates
-    private final double draw_cy = 265; // pixel coordinates
-    public HashMap<ComponentNames, Node> components;
-    public enum ComponentNames
+    private final double wheelRadius = CarConstants.R*m_to_px; // pixels
+    private final double draw_cx = 295;
+    private final double draw_cy = 265;
+
+    // For correcting an image's center of rotation.
+    // Our image is already appropriately centered.
+    private final double chassis_px_offset_x = 0;
+    private final double chassis_px_offset_y = 0;
+
+    HashMap<ComponentNames, Node> components;
+    enum ComponentNames
     {
       CHASSIS,
       REAR_WHEEL,
@@ -30,16 +37,27 @@ public class CarVisualization
       CENTER_OF_MASS,
     }
 
-    public CarVisualization()
+    void addComponents( SimulationArea simulationArea )
+    {
+      simulationArea.getChildren().add( this.components.get( ComponentNames.CHASSIS ));
+      simulationArea.getChildren().add( this.components.get( ComponentNames.REAR_WHEEL ));
+      simulationArea.getChildren().add( this.components.get( ComponentNames.FRONT_WHEEL ));
+      simulationArea.getChildren().add( this.components.get( ComponentNames.REAR_WHEEL_LINE ));
+      simulationArea.getChildren().add( this.components.get( ComponentNames.FRONT_WHEEL_LINE ));
+      simulationArea.getChildren().add( this.components.get( ComponentNames.CENTER_OF_MASS ));
+
+    }
+
+    CarVisualization()
     {
       // Initialize the map of components.
       components = new HashMap<>();
 
       // Add all components.
       ImageView selectedImage = new ImageView();
-      Image image1 = new Image("car_img.png");
+      Image image1 = new Image("Resources/car_img.png");
       selectedImage.setImage(image1);
-      selectedImage.relocate(235,242);
+      selectedImage.relocate(0,0); // 235 242
 
       this.components.put(ComponentNames.CHASSIS, selectedImage);
       this.components.put(ComponentNames.REAR_WHEEL, new Ellipse(0,0,wheelRadius,wheelRadius));
@@ -57,7 +75,7 @@ public class CarVisualization
       ((Shape) this.components.get( ComponentNames.CENTER_OF_MASS )).setFill( Color.RED );
     }
 
-    public void update()
+    void update()
     {
       // Draw the center of mass at (draw_cx, draw_cy).
       // Offsets between the car's actual position and where it is drawn on the screen
@@ -66,19 +84,15 @@ public class CarVisualization
 
       double theta_C = Car.theta_C;
       this.components.get( ComponentNames.CHASSIS ).setRotate(Math.toDegrees(theta_C));
+      this.components.get(ComponentNames.CHASSIS).relocate( Math.cos(theta_C)* chassis_px_offset_x + Math.sin(theta_C)* chassis_px_offset_y,
+                                                            Math.sin(theta_C)* chassis_px_offset_x + Math.cos(theta_C)* chassis_px_offset_y);
 
-      //double front_theta = Car.rear_theta;
-      //double rear_theta = Car.front_theta;
       double front_theta = Car.theta_F;
       double rear_theta = Car.theta_R;
 
       this.components.get( ComponentNames.CENTER_OF_MASS ).relocate(draw_cx, draw_cy);
 
       // ----- [ REAR WHEEL ] --------------------------------------------------------------------------------------------
-      /*double s_x = (Car.s_x-Car.d) * m_to_px;
-      double s_y = Car.s_y*m_to_px;
-      double rotated_x = draw_cx + Math.cos(theta_C)*s_x - Math.sin(theta_C)*s_y;
-      double rotated_y = draw_cy + Math.sin(theta_C)*s_x + Math.cos(theta_C)*s_y;*/
       Point2D rearWheelPos = Car.getRearWheelPosition();
       double rotated_x = rearWheelPos.getX()*m_to_px - cx_offset;
       double rotated_y = rearWheelPos.getY()*m_to_px - cy_offset;
@@ -89,14 +103,10 @@ public class CarVisualization
       // Set the position for the rear wheel-line, which indicates the direction the rear wheel.
       ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStartX( rotated_x);
       ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStartY( rotated_y);
-      ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setEndX( rotated_x + Math.cos(theta_C+rear_theta+Math.PI/2)*wheelRadius );
-      ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+rear_theta+Math.PI/2)*wheelRadius );
+      ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setEndX( rotated_x + Math.cos(theta_C+rear_theta+ Math.PI/2)*wheelRadius );
+      ((Line) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+rear_theta+ Math.PI/2)*wheelRadius );
 
       // ----- [ FRONT WHEEL ] -------------------------------------------------------------------------------------------
-      /*s_x = Car.s_x * m_to_px;
-      s_y = Car.s_y;
-      rotated_x = draw_cx + Math.cos(theta_C)*s_x - Math.sin(theta_C)*s_y;
-      rotated_y = draw_cy + Math.sin(theta_C)*s_x + Math.cos(theta_C)*s_y;*/
       Point2D frontWheelPos = Car.getFrontWheelPosition();
       rotated_x = frontWheelPos.getX()*m_to_px - cx_offset;
       rotated_y = frontWheelPos.getY()*m_to_px - cy_offset;
@@ -106,7 +116,8 @@ public class CarVisualization
       // Set the position for the front wheel-line, which indicates the direction the front wheel.
       ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStartX( rotated_x);
       ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStartY( rotated_y);
-      ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndX( rotated_x + Math.cos(theta_C+front_theta+Math.PI/2)*wheelRadius );
-      ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+front_theta+Math.PI/2)*wheelRadius );
+      ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndX( rotated_x + Math.cos(theta_C+front_theta+ Math.PI/2)*wheelRadius );
+      ((Line) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setEndY( rotated_y + Math.sin(theta_C+front_theta+ Math.PI/2)*wheelRadius );
+
     }
 }
