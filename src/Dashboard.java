@@ -9,7 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
 
-
+/**
+ * This class is used for the user interface that allows setting the speed, acceleration, gear, and controlling the
+ * animation.
+ */
 public class Dashboard extends VBox
 {
   private Label speedDisplay;

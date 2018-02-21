@@ -9,6 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Main class and entrypoint for the application.
+ */
 public class Main extends Application
 {
   private final int window_width = 900;
