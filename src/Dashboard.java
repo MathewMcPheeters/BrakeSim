@@ -9,8 +9,6 @@ import javafx.scene.control.Alert;
 
 public class Dashboard extends VBox
 {
-
-
   public Dashboard(int spacing)
   {
     super(spacing);
@@ -182,7 +180,6 @@ public class Dashboard extends VBox
     simulationControl.setAlignment(Pos.CENTER);
     getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
   }
-
 
   public class ErrorDialog extends Alert
   {

@@ -2,6 +2,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -21,7 +23,10 @@ public class Main extends Application
   {
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
+
     this.dashboard = new Dashboard(10);
+    dashboard.setAlignment(Pos.CENTER);
+    dashboard.setPadding(new Insets(10,10,10,10));
     this.simulationArea = new SimulationArea();
 
     root.setPrefSize(window_width, window_height);
