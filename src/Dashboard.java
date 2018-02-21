@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
 
+/**
+ * This class provides the user interface that allows for selection of speed, acceleration, gear, and controlling the
+ * animation.
+ */
 public class Dashboard extends VBox
 {
   public Dashboard(int spacing, Timeline timeLine)
