@@ -10,6 +10,7 @@ import static java.lang.Math.sin;
 public class Car
 {
     private static Gear gear;
+    private static final double m_to_px = 12.5;
 
     // Variables regarding the position and velocity of the car.
     public static double x_C = 5; // x-position of car's center of mass (m)
@@ -59,14 +60,11 @@ public class Car
         brakeTorque = newBrakeTorque;
         T = brakeTorque-accelerationTorque;
     }
-    public static void engageBrakesLongPress()
+    public static void engageBrakes()
     {
         brakeSystem.engageBrakes();
     }
-    public static void engageBrakesShortPress()
-    {
-        brakeSystem.engageBrakes();
-    }
+
     public static void disengageBrakes()
     {
         setBrakeTorque(0.0);
@@ -229,6 +227,11 @@ public class Car
         double theta_R_next = theta_R + w_R*deltaTimeInSeconds;
         double w_F_next = w_F + getCurrentThetaFAcceleration()*deltaTimeInSeconds;
         double theta_F_next = theta_F + w_F*deltaTimeInSeconds;
+
+        // For the time being, before slipping wheels are considered, this is okay.
+        theta_F_next = theta_F + v_xC_next/(2*Math.PI)*m_to_px;
+        theta_R_next = theta_F_next;
+
 
         // Do some sanity checks:
         if(v_xC_next<0 && gear!=Gear.REVERSE) v_xC_next = 0;

@@ -9,6 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Main class and entrypoint for the application.
+ */
 public class Main extends Application
 {
   private final int window_width = 900;
@@ -17,7 +20,10 @@ public class Main extends Application
   private Dashboard dashboard;
   private SimulationArea simulationArea;
 
-  public static void main(String[] args) {launch(args); }
+  public static void main(String[] args)
+  {
+    launch(args);
+  }
   @Override
   public void start(Stage stage)
   {

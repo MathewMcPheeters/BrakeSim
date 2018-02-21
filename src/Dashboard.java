@@ -9,7 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
 
-
+/**
+ * This class is used for the user interface that allows setting the speed, acceleration, gear, and controlling the
+ * animation.
+ */
 public class Dashboard extends VBox
 {
   private Label speedDisplay;
@@ -165,25 +168,27 @@ public class Dashboard extends VBox
       }
       if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
       {
+
         if(Car.getGear() == Gear.REVERSE)
         {
-            if(Car.getXVelocity() > 0)
-            {
-                Car.setV_xC(Car.getXVelocity()*-1);
-            }
+          System.out.println(Car.getXVelocity());
+          if(Car.getXVelocity() > 0)
+          {
+            Car.setV_xC(Car.getXVelocity()*-1);
+          }
         }
         else if(Car.getGear() == Gear.DRIVE)
         {
-            if(Car.getXVelocity() < 0)
-            {
-                Car.setV_xC(Car.getXVelocity()*-1);
-            }
+          if(Car.getXVelocity() < 0)
+          {
+            Car.setV_xC(Car.getXVelocity()*-1);
+          }
         }
         timeLine.play();
       }
       else
       {
-         new ErrorDialog(AlertType.ERROR,"Simulation is already running");
+        new ErrorDialog(AlertType.ERROR,"Simulation is already running");
       }
     }));
 
@@ -195,12 +200,17 @@ public class Dashboard extends VBox
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->
     {
-        Car.resetVariables();
+      stop.fire();
+      Car.resetVariables();
+      updateLabels();
     });
     Button brake = new Button("Brake");
     brake.setOnAction((event) ->
     {
-
+      if(timeLine.getStatus() == Animation.Status.RUNNING)
+      {
+        Car.engageBrakes();
+      }
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);

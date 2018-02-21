@@ -5,6 +5,9 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
+/**
+ * Provides rendering for the car and environment.
+ */
 public class SimulationArea extends Pane
 {
   private Image backgroundImageFile = new Image("Resources/testBackground4.png");
@@ -39,6 +42,4 @@ public class SimulationArea extends Pane
         dashes.get(i).setX(600+dashes.get(i).getX());
     }
   }
-
-
 }

@@ -1,3 +1,6 @@
+/**
+ * This class contains constants for the physics calculations.
+ */
 public class CarConstants
 {
   final static double m_R = 8.0; // mass of rear wheel (kg)
