@@ -12,29 +12,6 @@ public class Car
 {
     private static Gear gear;
 
-    //Note: constants marked with /**/ have realistic values applied. Everything else is just a guesstimate for now.
-
-    // Constants regarding the mass and rotational inertia of the car
-    /**/private final static double m_R = 8.0; // mass of rear wheel (kg)
-    /**/private final static double m_F = 8.0; // mass of front wheel (kg)
-    /**/private final static double m_C = 1300; // mass of frame (kg)
-    private final static double I_zzR = 0.72; // moment of inertia of rear wheels (kg-m^2)
-    private final static double I_zzF = 0.72; // moment of inertia of front wheels (kg-m^2)
-    private final static double I_zzC = 11700; // moment of inertia of the car frame (kg-m^2)
-
-    // Constants regarding the car's suspension system and the car's physical dimensions:
-    /**/public final static double R = 0.4318; // wheel radius (m)
-    /**/public final static double d = 5.0800; // distance between the wheels (m)
-    public final static double s_x = 3; // x-distance between rear wheel and frame's center of mass (m)
-    public final static double s_y = 0.5; // y-distance between wheels and frame's center of mass (m)
-    /**/private final static double k = 2500.0; // The spring coefficient of the car's suspension system (N/m)
-    private final static double h = 1000.0; // The dampening coefficient of the car's suspension system (N-s/m)
-
-    // Constants regarding the environment
-    /**/private final static double mu = 0.7; // coefficient of friction between wheels and ground (unitless)
-    private final static double f_max = 500; // maximum static friction (N)
-    /**/private final static double g = 9.81; // gravity (m/s^2)
-
     // Variables regarding the position and velocity of the car.
     public static double x_C = 5; // x-position of car's center of mass (m)
     public static double y_C = 0.49; // y-position of car's center of mass (m)
@@ -123,8 +100,8 @@ public class Car
      */
     public static void setVariablesRollingContact()
     {
-        w_R = v_xC/R;
-        w_F = v_xC/R;
+        w_R = v_xC/CarConstants.R;
+        w_F = v_xC/CarConstants.R;
     }
     public static void resetVariables()
     {
@@ -146,8 +123,8 @@ public class Car
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition()
     {
-        double x_R = x_C - s_x*cos(theta_C) + s_y*sin(theta_C);
-        double y_R = y_C - s_x*sin(theta_C) - s_y*cos(theta_C);
+        double x_R = x_C - CarConstants.s_x*cos(theta_C) + CarConstants.s_y*sin(theta_C);
+        double y_R = y_C - CarConstants.s_x*sin(theta_C) - CarConstants.s_y*cos(theta_C);
         return new Point2D(x_R, y_R);
     }
 
@@ -155,8 +132,8 @@ public class Car
     public static Point2D getFrontWheelPosition()
     {
         Point2D rearWheelPos = getRearWheelPosition();
-        double x_F = rearWheelPos.getX() + d*cos(theta_C);
-        double y_F = rearWheelPos.getY() + d*sin(theta_C);
+        double x_F = rearWheelPos.getX() + CarConstants.d*cos(theta_C);
+        double y_F = rearWheelPos.getY() + CarConstants.d*sin(theta_C);
         return new Point2D(x_F, y_F);
     }
 
@@ -184,9 +161,8 @@ public class Car
     {
         // sanity check before big computations
         if(v_xC==0 && gear!=Gear.REVERSE && T>0) return 0.0;
-
         double theta_Cpp = getCurrentThetaCAcceleration();
-        return -(T/R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F) + (s_x*cos(theta_C)*w_C*w_C+s_x*sin(theta_C)*theta_Cpp-s_y*sin(theta_C)*w_C*w_C+s_y*cos(theta_C)*theta_Cpp)*(I_zzR/(R*R)-I_zzF/(R*R)+m_F-m_R)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F)+(d*cos(theta_C)*w_C*w_C+d*sin(theta_C)*theta_Cpp)*(I_zzF/(R*R)-m_F)/(I_zzF/(R*R)-I_zzR/(R*R)+m_C+m_R-m_F);
+        return -(T/CarConstants.R)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F) + (CarConstants.s_x*cos(theta_C)*w_C*w_C+CarConstants.s_x*sin(theta_C)*theta_Cpp-CarConstants.s_y*sin(theta_C)*w_C*w_C+CarConstants.s_y*cos(theta_C)*theta_Cpp)*(CarConstants.I_zzR/(CarConstants.R*CarConstants.R)-CarConstants.I_zzF/(CarConstants.R*CarConstants.R)+CarConstants.m_F-CarConstants.m_R)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F)+(CarConstants.d*cos(theta_C)*w_C*w_C+CarConstants.d*sin(theta_C)*theta_Cpp)*(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.m_F)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F);
     }
 
     /**
@@ -209,7 +185,7 @@ public class Car
         //double v_yR = v_yC - s_x*cos(theta_C)*w_C + s_y*sin(theta_C)*w_C;
         //double y_R = getRearWheelPosition().getY();
         //return (T-(N+h*v_yR)/k+y_R)*f_R/I_zzR;
-        return getCurrentXRAcceleration()/R;
+        return getCurrentXRAcceleration()/CarConstants.R;
     }
 
     /**
@@ -217,7 +193,7 @@ public class Car
      * @return the acceleration in radians/s^2
      */
     public static double getCurrentThetaFAcceleration(){
-        return getCurrentXFAcceleration()/R;
+        return getCurrentXFAcceleration()/CarConstants.R;
     }
 
     /**
@@ -228,7 +204,7 @@ public class Car
     {
         double theta_Cpp = getCurrentThetaCAcceleration();
         double x_Rpp = getCurrentXRAcceleration();
-        return x_Rpp - d*cos(theta_C)*w_C*w_C - d*sin(theta_C)*theta_Cpp;
+        return x_Rpp - CarConstants.d*cos(theta_C)*w_C*w_C - CarConstants.d*sin(theta_C)*theta_Cpp;
     }
 
     /**
@@ -238,7 +214,7 @@ public class Car
     private static double getCurrentXRAcceleration()
     {
         double theta_Cpp = getCurrentThetaCAcceleration();
-        return getCurrentXCAcceleration() + s_x*cos(theta_C)*w_C*w_C -s_y*sin(theta_C)*w_C*w_C + theta_Cpp*(s_x*sin(theta_C) + s_y*cos(theta_C));
+        return getCurrentXCAcceleration() + CarConstants.s_x*cos(theta_C)*w_C*w_C -CarConstants.s_y*sin(theta_C)*w_C*w_C + theta_Cpp*(CarConstants.s_x*sin(theta_C) + CarConstants.s_y*cos(theta_C));
     }
 
     /**

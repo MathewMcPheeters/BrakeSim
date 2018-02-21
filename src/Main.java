@@ -1,57 +1,43 @@
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-/**
- * This class is the entry point for the BrakeSim application. It should be
- * called with no arguments.
- */
+import javafx.util.Duration;
+
 public class Main extends Application
 {
-    @Override
-    public void start(Stage primaryStage)
-    {
-        BorderPane root = new BorderPane();
-        root.setPrefSize(900,500);
+  private final int window_width = 900;
+  private final int window_height = 500;
 
-        SimulationArea simulationArea = new SimulationArea();
+  private Dashboard dashboard;
+  private SimulationArea simulationArea;
 
-        SimulationWorker simulationWorker = new SimulationWorker();
-        simulationWorker.setSimulationArea(simulationArea); //Set the simulation area for the worker
+  public static void main(String[] args) {launch(args); }
+  @Override
+  public void start(Stage stage)
+  {
+    // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
+    BorderPane root = new BorderPane();
+    this.dashboard = new Dashboard(10);
+    this.simulationArea = new SimulationArea();
 
-        Dashboard dashboard = new Dashboard(10,simulationWorker);
-        dashboard.setAlignment(Pos.CENTER);
-        dashboard.setPadding(new Insets(10,10,10,10));
+    root.setPrefSize(window_width, window_height);
+    root.setCenter(simulationArea);
+    root.setLeft(dashboard);
 
-        root.setCenter(simulationArea);
-        root.setLeft(dashboard);
+    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
+    timeline.setCycleCount(Animation.INDEFINITE);
+    timeline.play();
 
-        Scene scene = new Scene(root);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>()
-        {
-            @Override
-            public void handle(WindowEvent event)
-            {
-                simulationWorker.setRunning(false);
-                simulationWorker.terminate();
-                while(simulationWorker.isAlive()){}
-                if(Car.getBrakeSystem() != null)
-                {
-                    Car.getBrakeSystem().setRunning(false);
-                    Car.getBrakeSystem().terminate();
-                    while(Car.getBrakeSystem().isAlive()){}
-                }
-            }
-        });
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-    public static void main(String[] args)
-    {
-        launch(args);
-    }
+    Scene scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public void update() {
+    System.out.println("update...");
+  }
 }
