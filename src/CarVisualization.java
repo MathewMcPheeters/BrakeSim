@@ -7,6 +7,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -22,9 +23,8 @@ public class CarVisualization
     private final double draw_cy = 265;
 
     // For correcting an image's center of rotation.
-    // Our image is already appropriately centered.
-    private final double chassis_px_offset_x = 0;
-    private final double chassis_px_offset_y = 0;
+    private final double chassis_px_offset_x =-64;
+    private final double chassis_px_offset_y =-26;
 
     HashMap<ComponentNames, Node> components;
     enum ComponentNames
@@ -45,7 +45,6 @@ public class CarVisualization
       simulationArea.getChildren().add( this.components.get( ComponentNames.REAR_WHEEL_LINE ));
       simulationArea.getChildren().add( this.components.get( ComponentNames.FRONT_WHEEL_LINE ));
       simulationArea.getChildren().add( this.components.get( ComponentNames.CENTER_OF_MASS ));
-
     }
 
     CarVisualization()
@@ -55,10 +54,11 @@ public class CarVisualization
 
       // Add all components.
       ImageView selectedImage = new ImageView();
-      Image image1 = new Image("Resources/car_img.png");
+      Image image1 = new Image("Resources/car_img_w_com.png");
       selectedImage.setImage(image1);
-      selectedImage.relocate(0,0); // 235 242
+      selectedImage.relocate(0,0);
 
+      // Add each component to the hashmap.
       this.components.put(ComponentNames.CHASSIS, selectedImage);
       this.components.put(ComponentNames.REAR_WHEEL, new Ellipse(0,0,wheelRadius,wheelRadius));
       this.components.put(ComponentNames.FRONT_WHEEL, new Ellipse(0,0,wheelRadius,wheelRadius));
@@ -73,24 +73,27 @@ public class CarVisualization
       ((Shape) this.components.get( ComponentNames.REAR_WHEEL_LINE )).setStroke( Color.WHITE );
       ((Shape) this.components.get( ComponentNames.FRONT_WHEEL_LINE )).setStroke( Color.WHITE );
       ((Shape) this.components.get( ComponentNames.CENTER_OF_MASS )).setFill( Color.RED );
+      ((Shape) this.components.get(ComponentNames.CENTER_OF_MASS)).setStrokeWidth(1);
+      ((Shape) this.components.get(ComponentNames.CENTER_OF_MASS)).setFill(Color.TRANSPARENT);
+      ((Shape) this.components.get(ComponentNames.CENTER_OF_MASS)).setStroke(Color.RED);
+
     }
 
     void update()
     {
       // Draw the center of mass at (draw_cx, draw_cy).
-      // Offsets between the car's actual position and where it is drawn on the screen
+      // Offsets between the car's actual position and where it is drawn on the screen.
       double cx_offset = Car.x_C*m_to_px - draw_cx;
       double cy_offset = -Car.y_C*m_to_px - draw_cy;
 
       double theta_C = Car.theta_C;
       this.components.get( ComponentNames.CHASSIS ).setRotate(Math.toDegrees(theta_C));
-      this.components.get(ComponentNames.CHASSIS).relocate( Math.cos(theta_C)* chassis_px_offset_x + Math.sin(theta_C)* chassis_px_offset_y,
-                                                            Math.sin(theta_C)* chassis_px_offset_x + Math.cos(theta_C)* chassis_px_offset_y);
-
+      this.components.get(ComponentNames.CHASSIS).relocate( draw_cx + Math.cos(theta_C)* chassis_px_offset_x + Math.sin(theta_C)* chassis_px_offset_y,
+                                                            draw_cy + Math.sin(theta_C)* chassis_px_offset_x + Math.cos(theta_C)* chassis_px_offset_y);
       double front_theta = Car.theta_F;
       double rear_theta = Car.theta_R;
 
-      this.components.get( ComponentNames.CENTER_OF_MASS ).relocate(draw_cx, draw_cy);
+      this.components.get( ComponentNames.CENTER_OF_MASS ).relocate(draw_cx-5, draw_cy-5);
 
       // ----- [ REAR WHEEL ] --------------------------------------------------------------------------------------------
       Point2D rearWheelPos = Car.getRearWheelPosition();

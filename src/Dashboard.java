@@ -129,6 +129,7 @@ public class Dashboard extends VBox
     Button start = new Button("Start");
     start.setOnAction((event ->
     {
+      Main.timeline.play();
       if(Car.getGear() == null)
       {
         new ErrorDialog(AlertType.ERROR,"Please Select a gear for the car");
@@ -166,7 +167,7 @@ public class Dashboard extends VBox
     Button stop = new Button("Stop");
     stop.setOnAction((event ->
     {
-
+      Main.timeline.pause();
     }));
     Button reset = new Button("Reset");
     reset.setOnAction((event) ->

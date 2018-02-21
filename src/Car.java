@@ -25,10 +25,6 @@ public class Car
     public static double theta_F = 0.0; // Front wheel's angle of rotation (radians)
     private static double w_F = 0.0; // Front wheel's rate of rotation (radians/s)
 
-    // Duplicate variables (Todo: these need to be collapsed into other variables or removed):
-    public static double rear_theta = 0;
-    public static double front_theta = 0;
-
     // Variables regarding the environment
     private static double accelerationTorque = 0.0; // Torque due to pressing the accelerator (N-m)
     private static double brakeTorque = 0.0; // torque applied by the brakes (N-m)
@@ -114,8 +110,6 @@ public class Car
         w_R = 0.0;
         theta_F = 0.0;
         w_F = 0.0;
-        rear_theta = 0;
-        front_theta = 0;
     }
     /** returns the position of the rear wheel */
     public static Point2D getRearWheelPosition()
@@ -262,9 +256,7 @@ public class Car
         return deltaX;
     }
 
-    /**
-     * Prints key variables, For debugging purposes
-     */
+    /** Prints key variables, For debugging purposes */
     public static void printCarStats()
     {
         System.out.println("CARFRAME");
@@ -281,32 +273,5 @@ public class Car
         System.out.println("theta_F = " + theta_F);
         System.out.println("w_F = " + w_F);
         System.out.println("*********timestep**********");
-    }
-
-    /**
-     * Compute the instantaneous accelerations for the current position and velocity of the car, to see if they look like they're in the right ballpark:
-     */
-    public static void runTests()
-    {
-        double thetaAccel = Car.getCurrentThetaCAcceleration();
-        double xAccel = Car.getCurrentXCAcceleration();
-        double yAccel = Car.getCurrentYCAcceleration();
-        /**
-        System.out.println("thetaAccel: " + thetaAccel);
-        System.out.println("xAccel: " + xAccel);
-        System.out.println("yAccel: " + yAccel);
-
-        System.out.println("position of rear wheel is " + getRearWheelPosition());
-        System.out.println("position of front wheel is " + getFrontWheelPosition());
-        **/
-        Car.v_xC += xAccel;
-        Car.v_yC += 0; //yAccel;
-
-        Car.x_C += Car.v_xC;
-        Car.y_C += Car.v_yC;
-
-        Car.rear_theta += Car.v_xC;
-        Car.front_theta += Car.v_xC;
-
     }
 }

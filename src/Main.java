@@ -6,9 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 public class Main extends Application
 {
+
+  static Timeline timeline;
   private final int window_width = 900;
   private final int window_height = 500;
 
@@ -28,16 +29,17 @@ public class Main extends Application
     root.setCenter(simulationArea);
     root.setLeft(dashboard);
 
-    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
+    timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
-    timeline.play();
 
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
   }
 
-  public void update() {
-    System.out.println("update...");
+  void update()
+  {
+    simulationArea.update();
+    System.out.println("updating...");
   }
 }
