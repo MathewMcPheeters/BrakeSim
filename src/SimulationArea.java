@@ -39,6 +39,4 @@ public class SimulationArea extends Pane
         dashes.get(i).setX(600+dashes.get(i).getX());
     }
   }
-
-
 }
