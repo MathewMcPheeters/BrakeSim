@@ -43,6 +43,12 @@ public class Dashboard extends VBox
       @Override
       public void handle(MouseEvent event)
       {
+        if(timeLine.getStatus() == Animation.Status.RUNNING)
+        {
+          String message = "Speed cannot be changed when simulator is running";
+          new ErrorDialog(AlertType.ERROR,message);
+          return;
+        }
         String speedText = speedInput.getText();
         if(speedText.equals("")) return;
         try
