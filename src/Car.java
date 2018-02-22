@@ -153,6 +153,7 @@ public class Car
     {
         // sanity check before big computations
         if(v_xC==0 && gear!=Gear.REVERSE && T>0) return 0.0;
+        if(v_xC==0 && gear==Gear.REVERSE && T<0) return 0.0;
         double theta_Cpp = getCurrentThetaCAcceleration();
         return -(T/CarConstants.R)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F) + (CarConstants.s_x*cos(theta_C)*w_C*w_C+CarConstants.s_x*sin(theta_C)*theta_Cpp-CarConstants.s_y*sin(theta_C)*w_C*w_C+CarConstants.s_y*cos(theta_C)*theta_Cpp)*(CarConstants.I_zzR/(CarConstants.R*CarConstants.R)-CarConstants.I_zzF/(CarConstants.R*CarConstants.R)+CarConstants.m_F-CarConstants.m_R)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F)+(CarConstants.d*cos(theta_C)*w_C*w_C+CarConstants.d*sin(theta_C)*theta_Cpp)*(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.m_F)/(CarConstants.I_zzF/(CarConstants.R*CarConstants.R)-CarConstants.I_zzR/(CarConstants.R*CarConstants.R)+CarConstants.m_C+CarConstants.m_R-CarConstants.m_F);
     }
@@ -240,6 +241,11 @@ public class Car
         if(v_xC_next<0 && gear!=Gear.REVERSE) v_xC_next = 0;
         if(w_R_next<0 && gear!=Gear.REVERSE) w_R_next = 0.0;
         if(w_F_next<0 && gear!=Gear.REVERSE) w_F_next = 0.0;
+
+        // Do some sanity checks:
+        if(v_xC_next>0 && gear==Gear.REVERSE) v_xC_next = 0;
+        if(w_R_next>0 && gear==Gear.REVERSE) w_R_next = 0.0;
+        if(w_F_next>0 && gear==Gear.REVERSE) w_F_next = 0.0;
 
         // Get the return value ready:
         double deltaX = x_C_next - x_C;

@@ -20,38 +20,40 @@ public class EBS
     {
       braking = true;
       double currentVelocity = Car.getXVelocity();
-      if (currentVelocity <= 10)
+      double absVelocity = Math.abs(Car.getXVelocity());
+      if (absVelocity <= 10)
       {
-        pressure = 500.;
+        pressure = 5000.;
       }
-      else if (currentVelocity > 10 && currentVelocity <= 20)
+      else if (absVelocity > 10 && absVelocity <= 20)
       {
-        pressure = 1000.;
+        pressure = 10000.;
       }
-      else if (currentVelocity > 20 && currentVelocity <= 30)
+      else if (absVelocity > 20 && absVelocity <= 30)
       {
-        pressure = 1800.;
+        pressure = 18000.;
       }
-      else if (currentVelocity > 30 && currentVelocity <= 40)
+      else if (absVelocity > 30 && absVelocity <= 40)
       {
-        pressure = 2300.;
+        pressure = 23000.;
       }
-      else if (currentVelocity > 40 && currentVelocity <= 50)
+      else if (absVelocity > 40 && absVelocity <= 50)
       {
-        pressure = 2600.;
+        pressure = 26000.;
       }
-      else if (currentVelocity > 50.0 && currentVelocity <= 60)
+      else if (absVelocity > 50.0 && absVelocity <= 60)
       {
-        pressure = 3600.;
+        pressure = 36000.;
       }
-      else if (currentVelocity > 60.0 && currentVelocity <= 80)
+      else if (absVelocity > 60.0 && absVelocity <= 80)
       {
-        pressure = 3800.;
+        pressure = 38000.;
       }
-      else if (currentVelocity > 80.0)
+      else if (absVelocity > 80.0)
       {
-        pressure = 4400.;
+        pressure = 44000.;
       }
+      if(currentVelocity<=0) pressure *= -1;
       Car.setBrakeTorque(pressure);
       braking = false;
     }
