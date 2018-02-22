@@ -16,6 +16,7 @@ public class SimulationArea extends Pane
   private CarVisualization carVisualization = new CarVisualization();
   private ArrayList<Rectangle> dashes = new ArrayList<>();
   private final double m_to_px = 12.5;
+  private int previousDash;
 
   SimulationArea()
   {
@@ -40,10 +41,19 @@ public class SimulationArea extends Pane
       //Get current car velocity (m/s) and convert to m / 16 ms
       double carCurrentVelocity = (Car.getXVelocity() * 16) / 1000;
 
-      dashes.get(i).setX((dashes.get(i).getX() - carCurrentVelocity * m_to_px) % 600);
+      dashes.get(i).setX((dashes.get(i).getX() - carCurrentVelocity * m_to_px));
 
       if (dashes.get(i).getX() < 0) {
-        dashes.get(i).setX(600 + dashes.get(i).getX());
+
+            //Get the index of the dash usually adjacent to the left of this dash
+            previousDash = i-1;
+
+            if(previousDash < 0) {
+                previousDash = dashes.size() - 1;
+            }
+
+            //Move this dash a fixed distance to the right of the dash it always follows.
+            dashes.get(i).setX(dashes.get(previousDash).getX()+9.15*m_to_px);
       }
     }
   }
