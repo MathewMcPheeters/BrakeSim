@@ -3,6 +3,11 @@
  * CS 460
  * This class contains the Emergency Braking System logic. It runs on it's own
  * thread, and gets signalled to engage the braking mechanism by Dashboard.java
+ *
+ * /Update every 60th of a second.
+ * /Transmission,speed,brake controller,light,
+ * /Team two is doing the review.
+ * /Team 8- sleep schedule, pick up code when it is done
  */
 public class EBS
 {
