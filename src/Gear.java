@@ -3,8 +3,8 @@
  */
 public enum Gear
 {
-    PARK,
-    REVERSE,
-    NEUTRAL,
-    DRIVE
+  PARK,
+  REVERSE,
+  NEUTRAL,
+  DRIVE
 }

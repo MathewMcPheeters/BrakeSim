@@ -47,7 +47,8 @@ public class Main extends Application
     stage.show();
   }
 
-  public void update() {
+  public void update()
+  {
     simulationArea.update();
     dashboard.updateLabels();
     //System.out.println("updating...");
