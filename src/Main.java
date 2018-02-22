@@ -33,9 +33,7 @@ public class Main extends Application
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
 
-    EBS ebs = new EBS();
-
-    this.dashboard = new Dashboard(10,timeline,ebs);
+    this.dashboard = new Dashboard(10,timeline);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(-50,10,10,10));
     this.simulationArea = new SimulationArea();
