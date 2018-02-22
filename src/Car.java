@@ -9,6 +9,7 @@ import static java.lang.Math.sin;
  */
 public class Car
 {
+  public static boolean measureStop = false;
   public static double stopping_distance = 0;
 
   private static Gear gear;
@@ -233,9 +234,8 @@ public class Car
     double theta_F_next = theta_F + w_F*deltaTimeInSeconds;
 
     // For the time being, before slipping wheels are considered, this is okay.
-    theta_F_next = theta_F + v_xC_next/(2*Math.PI)*m_to_px;
+    theta_F_next = theta_F + v_xC_next/(2*Math.PI)*m_to_px * 16.0 / 1000.0;
     theta_R_next = theta_F_next;
-
 
     // Do some sanity checks:
     if(v_xC_next<0 && gear!=Gear.REVERSE) v_xC_next = 0;
@@ -264,6 +264,13 @@ public class Car
     theta_R = theta_R_next;
     w_F = w_F_next;
     theta_F = theta_F_next;
+
+    if (measureStop)
+    {
+      stopping_distance += v_xC * 16.0 / 1000.0;
+      if (Math.round(1000 * v_xC)/1000.0 == 0)
+        measureStop = false;
+    }
 
     //printCarStats();
     return deltaX;

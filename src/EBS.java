@@ -16,6 +16,7 @@ public class EBS
 
   public void engageBrakes()
   {
+    Car.measureStop = true;
     if (!braking)
     {
       braking = true;
@@ -53,7 +54,10 @@ public class EBS
       {
         pressure = 44000.;
       }
-      if(currentVelocity<=0) pressure *= -1;
+      if(currentVelocity<=0)
+      {
+        pressure *= -1;
+      }
       Car.setBrakeTorque(pressure);
       braking = false;
     }

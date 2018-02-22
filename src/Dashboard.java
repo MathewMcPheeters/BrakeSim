@@ -179,7 +179,7 @@ public class Dashboard extends VBox
       }
       if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
       {
-
+        Car.stopping_distance = 0;
         if(Car.getGear() == Gear.REVERSE)
         {
           System.out.println(Car.getXVelocity());
