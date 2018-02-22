@@ -36,10 +36,15 @@ public class SimulationArea extends Pane
     carVisualization.update(); // Update the visualization.
     for (int i  = 0; i < dashes.size(); i++) // Update the dashes.
     {
-      // AWG: I took out 'deltaX' and put in getXVelocity...seems weird to just pass in this one parameter.
-      dashes.get(i).setX((dashes.get(i).getX()-Car.getXVelocity()*m_to_px)%600);
-      if  (dashes.get(i).getX() < 0)
-        dashes.get(i).setX(600+dashes.get(i).getX());
+
+      //Get current car velocity (m/s) and convert to m / 16 ms
+      double carCurrentVelocity = (Car.getXVelocity() * 16) / 1000;
+
+      dashes.get(i).setX((dashes.get(i).getX() - carCurrentVelocity * m_to_px) % 600);
+
+      if (dashes.get(i).getX() < 0) {
+        dashes.get(i).setX(600 + dashes.get(i).getX());
+      }
     }
   }
 }
