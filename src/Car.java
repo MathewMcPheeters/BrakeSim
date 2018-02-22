@@ -247,6 +247,7 @@ public class Car
         // Update values (car frame)
         x_C = x_C_next;
         v_xC = v_xC_next;
+        //System.out.println("Speed: "+v_xC);
         y_C = y_C_next;
         v_yC = v_yC_next;
         theta_C = theta_C_next;
