@@ -53,6 +53,7 @@ public class EBS
         pressure = 4400.;
       }
       Car.setBrakeTorque(pressure);
+      braking = false;
     }
   }
 }

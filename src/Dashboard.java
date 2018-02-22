@@ -51,6 +51,7 @@ public class Dashboard extends VBox
           if(speed>=0)
           {
             Car.setV_xC(speed);
+            Car.setBrakeTorque(0);
             speedDisplay.setText("Current Speed: "+ Car.getXVelocity()+" m/s");
           }
           else
