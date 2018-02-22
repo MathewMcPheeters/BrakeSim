@@ -18,10 +18,12 @@ public class Dashboard extends VBox
   private Label speedDisplay;
   private Label accelerationDisplay;
   private Label stopDistanceDisplay;
+  private EBS ebs;
 
-  public Dashboard(int spacing, Timeline timeLine)
+  public Dashboard(int spacing, Timeline timeLine, EBS ebs)
   {
     super(spacing);
+    this.ebs = ebs;
 
     speedDisplay = new Label("Current Speed: "+ Car.getXVelocity()+" m/s");
     speedDisplay.setAlignment(Pos.CENTER_LEFT);
