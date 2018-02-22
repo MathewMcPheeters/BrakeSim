@@ -3,6 +3,7 @@ package Car;
 public class CarVariables
 {
   private static Gear gear;
+  static double stoppingDistance = 0;
 
   // Variables regarding the position and velocity of the car.
   static double x_C = 5; // x-position of car's center of mass (m)
@@ -39,6 +40,10 @@ public class CarVariables
   {
     brakeTorque = newBrakeTorque;
   }
+  public static void setStoppingDistance(Double newStoppingDistance)
+  {
+    stoppingDistance = newStoppingDistance;
+  }
   /**
    * Sets wheel rotational velocities for the given car velocity, assuming rolling contact
    */
@@ -49,6 +54,10 @@ public class CarVariables
   }
 
   // Getters
+  public static double getStoppingDistance()
+  {
+    return stoppingDistance;
+  }
   public static double getX_C()
   {
     return x_C;
