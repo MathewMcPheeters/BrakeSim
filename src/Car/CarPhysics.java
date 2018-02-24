@@ -81,7 +81,7 @@ public class CarPhysics {
      * computes the current x-acceleration of the car frame. Input specifies whether the front and rear wheels are in
      * rolling contact or are sliding on the pavement.
      */
-    private double getX_Cpp(double theta_Cpp, boolean isRolling_R, boolean isRolling_F, long deltaTime){
+    public double getX_Cpp(double theta_Cpp, boolean isRolling_R, boolean isRolling_F, long deltaTime){
 
         double numerator = 1.0;
         double denominator = 1.0;
@@ -199,7 +199,7 @@ public class CarPhysics {
 
 
     /** Computes theta_Cpp (the angular acceleration of the car frame) using root-finding (bisection method)*/
-    private double getTheta_Cpp(boolean isRolling_R, boolean isRolling_F, long deltaTime){
+    public double getTheta_Cpp(boolean isRolling_R, boolean isRolling_F, long deltaTime){
         double errorTolerance = 0.001;
 
         double upperBound = 5;
@@ -270,8 +270,6 @@ public class CarPhysics {
      */
     public double step(long deltaTime)
     {
-
-
         double deltaTimeInSeconds = ((double)deltaTime/1000.0);
 
         // Determine whether the rear wheel is sliding or in rolling contact:
@@ -320,6 +318,9 @@ public class CarPhysics {
         theta_R = theta_R_next;
         w_F = w_F_next;
         theta_F = theta_F_next;
+
+        // Update bookkeeping variables
+        if(getBrakeTorque() != 0.0) CarVariables.incrementStopDistance(deltaX);
 
         //printCarStats();
         return deltaX;

@@ -1,3 +1,4 @@
+import Car.CarPhysics;
 import Car.CarVariables;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
@@ -18,23 +19,25 @@ public class Dashboard extends VBox
 {
   private Label speedDisplay;
   private Label accelerationDisplay;
-  //private Label stopDistanceDisplay;
+  private Label stopDistanceDisplay;
   private EBS ebs;
+  private CarPhysics carPhysics;
 
-  public Dashboard(int spacing, Timeline timeLine, EBS ebs)
+  public Dashboard(int spacing, Timeline timeLine, EBS ebs, CarPhysics carPhysics)
   {
     super(spacing);
 
     this.ebs = ebs;
+    this.carPhysics = carPhysics;
 
     speedDisplay = new Label("Current Speed: "+ CarVariables.getV_xC() +" m/s");
     speedDisplay.setAlignment(Pos.CENTER_LEFT);
 
-    accelerationDisplay = new Label("Current Acceleration: ??? m/s^2");
+    accelerationDisplay = new Label("Current Acceleration: 0.0 m/s^2");
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
 
-    //stopDistanceDisplay = new Label("Stopping Distance: "+CarVariables.stopping_distance+" m");
-    //stopDistanceDisplay.setAlignment(Pos.CENTER_LEFT);
+    stopDistanceDisplay = new Label("Stopping Distance: "+CarVariables.getStopDistance()+" m");
+    stopDistanceDisplay.setAlignment(Pos.CENTER_LEFT);
 
     // Note: We currently cannot change the velocity in the middle of the simulation; The wheel rotations will be wrong.
     HBox speed = new HBox(5);
@@ -100,7 +103,9 @@ public class Dashboard extends VBox
           if(acceleration>=0)
           {
             CarVariables.setAccelerationTorque(acceleration);
-            //accelerationDisplay.setText("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
+            double currentThetaCpp = carPhysics.getTheta_Cpp(true, true, 16);
+            double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,true,true,16);
+            accelerationDisplay.setText("Current Acceleration: "+Math.round(100*currentAcceleration)/100.0+" m/s^2");
           }
           else
           {
@@ -230,15 +235,16 @@ public class Dashboard extends VBox
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
-    getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
+    getChildren().addAll(speedDisplay,accelerationDisplay, stopDistanceDisplay ,speed,acceleration,gear,simulationControl);
   }
 
   public void updateLabels()
   {
-    //accelerationDisplay.setText("Current Acceleration: "+Math.round(100*Car.getCurrentXCAcceleration())/100.0+" m/s^2");
     speedDisplay.setText("Current Speed: "+ Math.round(100*CarVariables.getV_xC())/100.0+" m/s");
-    //stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*Car.stopping_distance)/100.0+" m");
-
+    stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*CarVariables.getStopDistance())/100.0+" m");
+    double currentThetaCpp = carPhysics.getTheta_Cpp(true, true, 16);
+    double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,true,true,16);
+    accelerationDisplay.setText("Current Acceleration: "+ Math.round(100*currentAcceleration)/100.0+" m/s^2");
   }
 
   public class ErrorDialog extends Alert

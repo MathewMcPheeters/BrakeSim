@@ -1,3 +1,4 @@
+import Car.CarPhysics;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,11 +35,12 @@ public class Main extends Application
     timeline.setCycleCount(Animation.INDEFINITE);
 
     EBS ebs = new EBS();
+    CarPhysics carPhysics = new CarPhysics();
 
-    this.dashboard = new Dashboard(10,timeline, ebs);
+    this.dashboard = new Dashboard(10,timeline, ebs, carPhysics);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(-50,10,10,10));
-    this.simulationArea = new SimulationArea();
+    this.simulationArea = new SimulationArea(carPhysics);
 
     root.setPrefSize(window_width, window_height);
     root.setCenter(simulationArea);

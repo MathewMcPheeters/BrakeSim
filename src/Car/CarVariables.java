@@ -26,6 +26,9 @@ public class CarVariables
     private static double accelerationTorque = 0.0; // Torque due to pressing the accelerator (N-m)
     private static double brakeTorque = 0.0; // torque applied by the brakes (N-m)
 
+    // Bookkeeping variables
+    private static double stopDistance = 0.0;
+
     // Setters
     public static void setGear(Gear newGear){
         gear = newGear;
@@ -47,6 +50,9 @@ public class CarVariables
     {
         w_R = v_xC/CarConstants.R;
         w_F = v_xC/CarConstants.R;
+    }
+    public static void incrementStopDistance(double increment){
+        stopDistance += increment;
     }
 
 
@@ -76,6 +82,9 @@ public class CarVariables
     public static double getAccelerationTorque(){
         return accelerationTorque;
     }
+    public static double getStopDistance(){
+        return stopDistance;
+    }
 
     public static void resetVariables()
     {
@@ -89,5 +98,6 @@ public class CarVariables
         w_R = 0.0;
         theta_F = 0.0;
         w_F = 0.0;
+        stopDistance = 0.0;
     }
 }

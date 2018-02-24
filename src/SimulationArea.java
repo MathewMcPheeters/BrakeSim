@@ -12,17 +12,20 @@ import java.util.ArrayList;
  */
 public class SimulationArea extends Pane
 {
-  private CarPhysics carPhysics = new CarPhysics();
+  private CarPhysics carPhysics;
   private Image backgroundImageFile = new Image("Resources/testBackground4.png");
   private BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO,false,false,true,false);
   private BackgroundImage backgroundImage = new BackgroundImage(backgroundImageFile, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-  private CarVisualization carVisualization = new CarVisualization(carPhysics);
+  private CarVisualization carVisualization;
   private ArrayList<Rectangle> dashes = new ArrayList<>();
   private final double m_to_px = 12.5;
   private int previousDash;
 
-  SimulationArea()
+  SimulationArea(CarPhysics carPhysics)
   {
+    this.carPhysics = carPhysics;
+    carVisualization = new CarVisualization(carPhysics);
+
     // Set the environment and add the car visualization to the scene.
     this.setBackground(new Background(backgroundImage));
     for (int i = 0; i < 6; i++) // Add the dashes to the scene.
