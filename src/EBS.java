@@ -1,4 +1,5 @@
 import Car.CarVariables;
+import VirtualDevices.BrakeButton;
 
 /**
  * James Perry
@@ -15,58 +16,57 @@ public class EBS
 {
   private boolean braking = false;
   private Double pressure = 0.0;
+  private BrakeButton brakeButton;
 
-  public void disengageBrakes()
+  public EBS(BrakeButton brakeButton)
   {
-    CarVariables.setBrakeTorque(0);
+    this.brakeButton = brakeButton;
   }
 
   public void update()
   {
-
-  }
-
-  public void engageBrakes()
-  {
-    //Car.measureStop = true;
-    if (!braking)
+    if(brakeButton.getPosition() == BrakeButton.Position.DOWN)
     {
-      braking = true;
-      double absVelocity = Math.abs(CarVariables.getV_xC());
-      if (absVelocity <= 10)
+      if(!braking)
       {
-        pressure = 5000.;
+        braking = true;
+        double absVelocity = Math.abs(CarVariables.getV_xC());
+        if (absVelocity <= 10)
+        {
+          pressure = 5000.;
+        }
+        else if (absVelocity > 10 && absVelocity <= 20)
+        {
+          pressure = 10000.;
+        }
+        else if (absVelocity > 20 && absVelocity <= 30)
+        {
+          pressure = 18000.;
+        }
+        else if (absVelocity > 30 && absVelocity <= 40)
+        {
+          pressure = 23000.;
+        }
+        else if (absVelocity > 40 && absVelocity <= 50)
+        {
+          pressure = 26000.;
+        }
+        else if (absVelocity > 50.0 && absVelocity <= 60)
+        {
+          pressure = 36000.;
+        }
+        else if (absVelocity > 60.0 && absVelocity <= 80)
+        {
+          pressure = 38000.;
+        }
+        else if (absVelocity > 80.0)
+        {
+          pressure = 44000.;
+        }
+        CarVariables.setBrakeTorque(pressure);
+        braking = false;
+        brakeButton.setPosition(BrakeButton.Position.UP);
       }
-      else if (absVelocity > 10 && absVelocity <= 20)
-      {
-        pressure = 10000.;
-      }
-      else if (absVelocity > 20 && absVelocity <= 30)
-      {
-        pressure = 18000.;
-      }
-      else if (absVelocity > 30 && absVelocity <= 40)
-      {
-        pressure = 23000.;
-      }
-      else if (absVelocity > 40 && absVelocity <= 50)
-      {
-        pressure = 26000.;
-      }
-      else if (absVelocity > 50.0 && absVelocity <= 60)
-      {
-        pressure = 36000.;
-      }
-      else if (absVelocity > 60.0 && absVelocity <= 80)
-      {
-        pressure = 38000.;
-      }
-      else if (absVelocity > 80.0)
-      {
-        pressure = 44000.;
-      }
-      CarVariables.setBrakeTorque(pressure);
-      braking = false;
     }
   }
 }

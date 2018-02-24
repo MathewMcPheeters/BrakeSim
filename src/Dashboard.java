@@ -206,6 +206,7 @@ public class Dashboard extends VBox
           }
         }
         CarVariables.setRollingContact();
+        brakeButton.setPosition(BrakeButton.Position.UP);
         timeLine.play();
       }
       else

@@ -36,9 +36,10 @@ public class Main extends Application
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
 
-    ebs = new EBS();
+
     CarPhysics carPhysics = new CarPhysics();
     BrakeButton brakeButton = new BrakeButton();
+    ebs = new EBS(brakeButton);
 
     this.dashboard = new Dashboard(10,timeline, ebs, carPhysics,brakeButton);
     dashboard.setAlignment(Pos.CENTER);
