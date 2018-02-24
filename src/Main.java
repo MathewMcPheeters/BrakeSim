@@ -1,4 +1,5 @@
 import Car.CarPhysics;
+import VirtualDevices.BrakeButton;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,6 +21,7 @@ public class Main extends Application
 
   private Dashboard dashboard;
   private SimulationArea simulationArea;
+  private EBS ebs;
 
   public static void main(String[] args)
   {
@@ -34,10 +36,11 @@ public class Main extends Application
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
 
-    EBS ebs = new EBS();
+    ebs = new EBS();
     CarPhysics carPhysics = new CarPhysics();
+    BrakeButton brakeButton = new BrakeButton();
 
-    this.dashboard = new Dashboard(10,timeline, ebs, carPhysics);
+    this.dashboard = new Dashboard(10,timeline, ebs, carPhysics,brakeButton);
     dashboard.setAlignment(Pos.CENTER);
     dashboard.setPadding(new Insets(-50,10,10,10));
     this.simulationArea = new SimulationArea(carPhysics);
@@ -54,6 +57,7 @@ public class Main extends Application
   public void update()
   {
     simulationArea.update();
+    ebs.update();
     dashboard.updateLabels();
     //System.out.println("updating...");
   }

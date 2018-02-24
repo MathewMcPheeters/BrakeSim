@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Alert;
-
+import VirtualDevices.BrakeButton;
 /**
  * This class is used for the user interface that allows setting the speed, acceleration, gear, and controlling the
  * animation.
@@ -23,7 +23,7 @@ public class Dashboard extends VBox
   private EBS ebs;
   private CarPhysics carPhysics;
 
-  public Dashboard(int spacing, Timeline timeLine, EBS ebs, CarPhysics carPhysics)
+  public Dashboard(int spacing, Timeline timeLine, EBS ebs, CarPhysics carPhysics, BrakeButton brakeButton)
   {
     super(spacing);
 
@@ -231,7 +231,11 @@ public class Dashboard extends VBox
     {
       if(timeLine.getStatus() == Animation.Status.RUNNING)
       {
-        ebs.engageBrakes();
+        //ebs.engageBrakes();
+        if(brakeButton.getPosition() == BrakeButton.Position.UP)
+        {
+          brakeButton.setPosition(BrakeButton.Position.DOWN);
+        }
       }
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
