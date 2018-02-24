@@ -149,30 +149,26 @@ public class CarPhysics {
     /** computes the torque acting on the rear wheel */
     private double getTorque(double theta_Cpp, boolean isRolling_R, boolean isRolling_F , long deltaTime){
 
-        double deltaTimeInSeconds = (double)deltaTime/1000.0;
         double torque = getBaseTorque();
+        double deltaTimeInSeconds = (double)deltaTime/1000.0;
 
-        // If the base torque would cause the rear wheel to spin backwards while the car is in drive, then adjust the torque
+        // If the base torque would cause the rear wheel to spin backwards while the car is in Drive, then adjust the torque
         // Todo: this seems kinda kludgy. Is there a better way to handle this?
-        if(isRolling_R){
-            if(w_R < 0 && getGear()==Gear.DRIVE) setBrakeTorque(getAccelerationTorque());
+        if(w_R <= 0.0 && getGear()==Gear.DRIVE) {
+            torque = 0.0;
         }
 
-        // If the base torque would cause the rear wheel to spin forwards while the car is in drive, then adjust the torque
+        // If the base torque would cause the rear wheel to spin forwards while the car is in Reverse, then adjust the torque
         // Todo: this seems kinda kludgy. Is there a better way to handle this?
-        if(isRolling_R){
-            if(w_R > 0 && getGear()==Gear.REVERSE) setBrakeTorque(getAccelerationTorque());
+        if(w_R >= 0.0 && getGear()==Gear.REVERSE) {
+            torque = 0.0;
         }
 
-        //if(isRolling_R) theta_Rpp = (getX_Rpp_rel(theta_Cpp) + getX_Cpp(theta_Cpp,isRolling_R, isRolling_F, deltaTime))/CarConstants.R;
-        /*else{
-            double theta_Rpp = (torque-R*mu*(k*(R-getY_R()) - h*getY_Rp()))/I_zzR;
-            System.out.println("w_R+theta_Rpp*deltaTimeInSeconds = " + w_R + " + " + theta_Rpp + "*" + deltaTimeInSeconds);
-            if(w_R+theta_Rpp*deltaTimeInSeconds<0 && getGear()==Gear.DRIVE){
-                theta_Rpp = -w_R/deltaTimeInSeconds;
-                torque = theta_Rpp*I_zzR +R*mu*(k*(R-getY_R()) - h*getY_Rp());
-            }
-        }*/
+        // If the base torque would cause the rear wheel to spin at all while the car is in Park, then adjust the torque
+        // Todo: this seems kinda kludgy. Is there a better way to handle this?
+        if(abs(w_R) >= 0.0 && getGear()==Gear.PARK) {
+            torque = 0.0;
+        }
 
         return torque;
     }
@@ -271,16 +267,21 @@ public class CarPhysics {
     public double step(long deltaTime)
     {
         double deltaTimeInSeconds = ((double)deltaTime/1000.0);
+        boolean isRolling_R;
+        boolean isRolling_F;
 
         // Determine whether the rear wheel is sliding or in rolling contact:
         double w_roll = getX_Rp()/R;
-        boolean isRolling_R = (w_roll-w_R)/w_roll < slipTolerance;
+        if(abs(getX_Rp()) > 0.1) isRolling_R = (w_roll-w_R)/w_roll < slipTolerance;
+        else isRolling_R = abs(v_xC) < 0.1; // use this test instead when w_roll is small, to prevent division by 0.
 
         // Determine whether the front wheel is sliding or in rolling contact:
-        double w_slip = getX_Fp()/R;
-        boolean isRolling_F = (w_slip-w_F)/w_slip < slipTolerance;
+        w_roll = getX_Fp()/R;
+        if(abs(getX_Fp()) > 0.1) isRolling_F = (w_roll-w_F)/w_roll < slipTolerance;
+        else isRolling_F = abs(v_xC) < 0.1; // use this test instead when w_roll is small, to prevent division by 0.
 
-        if(!isRolling_F || !isRolling_R) System.out.println("one of the wheels is slipping");
+        if(!isRolling_F) System.out.println("the front wheel is slipping");
+        if(!isRolling_R) System.out.println("the rear wheel is slipping");
 
         // Compute theta_Cpp (the angular acceleration of the car frame) using a root-finding method:
         double theta_Cpp = getTheta_Cpp(isRolling_R,isRolling_F, deltaTime);
@@ -304,6 +305,20 @@ public class CarPhysics {
 
         // Get the return value ready:
         double deltaX = x_C_next - x_C;
+
+        /* Sanity Checks */
+        // The back wheel cannot spin backwards if the car is in Drive:
+        if(w_R_next<0 && getGear()==Gear.DRIVE) w_R_next = 0.0;
+        // The back wheel cannot spin forwards if the car is in Reverse:
+        if(w_R_next>0 && getGear()==Gear.REVERSE) w_R_next = 0.0;
+        // The back wheel cannot spin at all if the car is in Park:
+        if(abs(w_R_next)>0 && getGear()==Gear.PARK) w_R_next = 0.0;
+        // If both wheels are in rolling contact and the back wheel is no longer spinning due to one of the above modifications, then the car frame should not be moving at all in the next frame. The front wheel shouldn't spin, either:
+        if(isRolling_R && isRolling_F && w_R_next == 0)
+        {
+            v_xC_next = 0.0;
+            w_F_next = 0.0;
+        }
 
         // Update values (car frame)
         x_C = x_C_next;

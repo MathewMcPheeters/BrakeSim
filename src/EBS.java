@@ -27,7 +27,6 @@ public class EBS
     if (!braking)
     {
       braking = true;
-      double currentVelocity = CarVariables.getV_xC();
       double absVelocity = Math.abs(CarVariables.getV_xC());
       if (absVelocity <= 10)
       {
@@ -61,10 +60,11 @@ public class EBS
       {
         pressure = 44000.;
       }
-      if(currentVelocity<=0)
+      // negating the torque when the car is in reverse is internally handled within the CarPhysics class, now.
+      /*if(currentVelocity<=0)
       {
         pressure *= -1;
-      }
+      }*/
       CarVariables.setBrakeTorque(pressure);
       braking = false;
     }

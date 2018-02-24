@@ -6,7 +6,7 @@ package Car;
  */
 public class CarVariables
 {
-    private static Gear gear;
+    private static Gear gear = Gear.DRIVE;
 
     // Variables regarding the position and velocity of the car.
     static double x_C = 5; // x-position of car's center of mass (m)
@@ -34,14 +34,16 @@ public class CarVariables
         gear = newGear;
     }
     public static void setAccelerationTorque(double newAccelerationTorque){
-        accelerationTorque = newAccelerationTorque;
+        if(newAccelerationTorque<0) accelerationTorque = -newAccelerationTorque;
+        else accelerationTorque = newAccelerationTorque;
     }
     public static void setV_xC(double newV_xC){
         v_xC = newV_xC;
     }
     public static void setBrakeTorque(double newBrakeTorque)
     {
-        brakeTorque = newBrakeTorque;
+        if(newBrakeTorque < 0) brakeTorque = -newBrakeTorque;
+        else brakeTorque = newBrakeTorque;
     }
     /**
      * Sets wheel rotational velocities for the given car velocity, assuming rolling contact
@@ -78,9 +80,24 @@ public class CarVariables
     {
         return gear;
     }
-    public static double getBrakeTorque(){return brakeTorque;}
+    public static double getBrakeTorque()
+    {
+        switch(gear)
+        {
+            case REVERSE:
+                return -brakeTorque;
+            default:
+                return brakeTorque;
+        }
+    }
     public static double getAccelerationTorque(){
-        return accelerationTorque;
+        switch (gear)
+        {
+            case REVERSE:
+                return -accelerationTorque;
+            default:
+                return accelerationTorque;
+        }
     }
     public static double getStopDistance(){
         return stopDistance;

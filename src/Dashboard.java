@@ -105,6 +105,7 @@ public class Dashboard extends VBox
             CarVariables.setAccelerationTorque(acceleration);
             double currentThetaCpp = carPhysics.getTheta_Cpp(true, true, 16);
             double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,true,true,16);
+            CarVariables.setBrakeTorque(0.0); // Brake torque must be set to zero here because calling getX_Cpp can cause brakeTorque to be set to a nonzero value.
             accelerationDisplay.setText("Current Acceleration: "+Math.round(100*currentAcceleration)/100.0+" m/s^2");
           }
           else
