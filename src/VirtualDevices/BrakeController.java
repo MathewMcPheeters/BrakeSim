@@ -1,4 +1,10 @@
 package VirtualDevices;
 
-public class BrakeController {
+public class BrakeController
+{
+  private double brakePressure = 0;
+  public void setBrakePressure(double pressure)
+  {
+    this.brakePressure = pressure;
+  }
 }
