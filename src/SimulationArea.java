@@ -1,3 +1,5 @@
+import Car.CarPhysics;
+import Car.CarVariables;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -10,10 +12,11 @@ import java.util.ArrayList;
  */
 public class SimulationArea extends Pane
 {
+  private CarPhysics carPhysics = new CarPhysics();
   private Image backgroundImageFile = new Image("Resources/testBackground4.png");
   private BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO,false,false,true,false);
   private BackgroundImage backgroundImage = new BackgroundImage(backgroundImageFile, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-  private CarVisualization carVisualization = new CarVisualization();
+  private CarVisualization carVisualization = new CarVisualization(carPhysics);
   private ArrayList<Rectangle> dashes = new ArrayList<>();
   private final double m_to_px = 12.5;
   private int previousDash;
@@ -33,27 +36,27 @@ public class SimulationArea extends Pane
 
   void update()
   {
-    Car.step(16); // Update the physical model.
+    carPhysics.step(16); // Update the physical model.
     carVisualization.update(); // Update the visualization.
     for (int i  = 0; i < dashes.size(); i++) // Update the dashes.
     {
 
-      //Get current car velocity (m/s) and convert to m / 16 ms
-      double carCurrentVelocity = (Car.getXVelocity() * 16) / 1000;
+      //Get the distance traveled by the car this frame and convert it to pixels
+      double distanceTraveled = (CarVariables.getV_xC() * 16) / 1000;
 
-      dashes.get(i).setX((dashes.get(i).getX() - carCurrentVelocity * m_to_px));
+      dashes.get(i).setX((dashes.get(i).getX() - distanceTraveled * m_to_px));
 
       if (dashes.get(i).getX() < 0) {
 
-            //Get the index of the dash usually adjacent to the left of this dash
-            previousDash = i-1;
+        //Get the index of the dash usually adjacent to the left of this dash
+        previousDash = i-1;
 
-            if(previousDash < 0) {
-                previousDash = dashes.size() - 1;
-            }
+        if(previousDash < 0) {
+          previousDash = dashes.size() - 1;
+        }
 
-            //Move this dash a fixed distance to the right of the dash it always follows.
-            dashes.get(i).setX(dashes.get(previousDash).getX()+9.15*m_to_px);
+        //Move this dash a fixed distance to the right of the dash it always follows.
+        dashes.get(i).setX(dashes.get(previousDash).getX()+9.15*m_to_px);
       }
     }
   }

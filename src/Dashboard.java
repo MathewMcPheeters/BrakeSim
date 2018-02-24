@@ -1,3 +1,4 @@
+import Car.CarVariables;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
@@ -17,20 +18,23 @@ public class Dashboard extends VBox
 {
   private Label speedDisplay;
   private Label accelerationDisplay;
-  private Label stopDistanceDisplay;
+  //private Label stopDistanceDisplay;
+  private EBS ebs;
 
-  public Dashboard(int spacing, Timeline timeLine)
+  public Dashboard(int spacing, Timeline timeLine, EBS ebs)
   {
     super(spacing);
 
-    speedDisplay = new Label("Current Speed: "+ Car.getXVelocity()+" m/s");
+    this.ebs = ebs;
+
+    speedDisplay = new Label("Current Speed: "+ CarVariables.getV_xC() +" m/s");
     speedDisplay.setAlignment(Pos.CENTER_LEFT);
 
-    accelerationDisplay = new Label("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
+    accelerationDisplay = new Label("Current Acceleration: ??? m/s^2");
     accelerationDisplay.setAlignment(Pos.CENTER_LEFT);
 
-    stopDistanceDisplay = new Label("Stopping Distance: "+Car.stopping_distance+" m");
-    stopDistanceDisplay.setAlignment(Pos.CENTER_LEFT);
+    //stopDistanceDisplay = new Label("Stopping Distance: "+CarVariables.stopping_distance+" m");
+    //stopDistanceDisplay.setAlignment(Pos.CENTER_LEFT);
 
     // Note: We currently cannot change the velocity in the middle of the simulation; The wheel rotations will be wrong.
     HBox speed = new HBox(5);
@@ -56,9 +60,9 @@ public class Dashboard extends VBox
           double speed = Double.parseDouble(speedText);
           if(speed>=0)
           {
-            Car.setV_xC(speed);
-            Car.setBrakeTorque(0);
-            speedDisplay.setText("Current Speed: "+ Car.getXVelocity()+" m/s");
+            CarVariables.setV_xC(speed);
+            CarVariables.setBrakeTorque(0);
+            speedDisplay.setText("Current Speed: "+ CarVariables.getV_xC()+" m/s");
           }
           else
           {
@@ -95,8 +99,8 @@ public class Dashboard extends VBox
           double acceleration = Double.parseDouble(accelerationText);
           if(acceleration>=0)
           {
-            Car.setAccelerationTorque(acceleration);
-            accelerationDisplay.setText("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
+            CarVariables.setAccelerationTorque(acceleration);
+            //accelerationDisplay.setText("Current Acceleration: "+Car.getCurrentXCAcceleration()+" m/s^2");
           }
           else
           {
@@ -127,22 +131,22 @@ public class Dashboard extends VBox
 
     park.setOnAction((event ->
     {
-      Car.setGear(Gear.PARK);
+      CarVariables.setGear(Car.Gear.PARK);
     }));
     reverse.setToggleGroup(toggleGroup);
     reverse.setOnAction((event ->
     {
-      Car.setGear(Gear.REVERSE);
+      CarVariables.setGear(Car.Gear.REVERSE);
     }));
     neutral.setToggleGroup(toggleGroup);
     neutral.setOnAction((event ->
     {
-      Car.setGear(Gear.NEUTRAL);
+      CarVariables.setGear(Car.Gear.NEUTRAL);
     }));
     drive.setToggleGroup(toggleGroup);
     drive.setOnAction((event ->
     {
-      Car.setGear(Gear.DRIVE);
+      CarVariables.setGear(Car.Gear.DRIVE);
     }));
     gear.getChildren().addAll(gearLabel,park,reverse,neutral,drive);
 
@@ -152,14 +156,14 @@ public class Dashboard extends VBox
     start.setOnAction((event ->
     {
       //timeLine.play();
-      if(Car.getGear() == null)
+      if(CarVariables.getGear() == null)
       {
         new ErrorDialog(AlertType.ERROR,"Please Select a gear for the car");
         return;
       }
-      if(Car.getGear() == Gear.PARK || Car.getGear() == Gear.NEUTRAL)
+      if(CarVariables.getGear() == Car.Gear.PARK || CarVariables.getGear() == Car.Gear.NEUTRAL)
       {
-        if(Car.getAccelerationTorque() != 0 || Car.getXVelocity() != 0)
+        if(CarVariables.getAccelerationTorque() != 0 || CarVariables.getV_xC() != 0)
         {
           String message = "Starting acceleration and speed must be zero if starting gear is "+
                   "Park or Neutral";
@@ -167,9 +171,9 @@ public class Dashboard extends VBox
           return;
         }
       }
-      if(Car.getGear() == Gear.DRIVE || Car.getGear() == Gear.REVERSE)
+      if(CarVariables.getGear() == Car.Gear.DRIVE || CarVariables.getGear() == Car.Gear.REVERSE)
       {
-        if(Car.getAccelerationTorque() == 0 && Car.getXVelocity() == 0)
+        if(CarVariables.getAccelerationTorque() == 0 && CarVariables.getV_xC() == 0)
         {
           String message = "Starting acceleration and speed cannot both be zero if starting gear is "+
                   "either Drive or Reverse";
@@ -179,22 +183,23 @@ public class Dashboard extends VBox
       }
       if(timeLine.getStatus() == Animation.Status.PAUSED || timeLine.getStatus() == Animation.Status.STOPPED)
       {
-        Car.stopping_distance = 0;
-        if(Car.getGear() == Gear.REVERSE)
+        //Car.stopping_distance = 0;
+        if(CarVariables.getGear() == Car.Gear.REVERSE)
         {
-          System.out.println(Car.getXVelocity());
-          if(Car.getXVelocity() > 0)
+          System.out.println(CarVariables.getV_xC());
+          if(CarVariables.getV_xC() > 0)
           {
-            Car.setV_xC(Car.getXVelocity()*-1);
+            CarVariables.setV_xC(CarVariables.getV_xC()*-1);
           }
         }
-        else if(Car.getGear() == Gear.DRIVE)
+        else if(CarVariables.getGear() == Car.Gear.DRIVE)
         {
-          if(Car.getXVelocity() < 0)
+          if(CarVariables.getV_xC() < 0)
           {
-            Car.setV_xC(Car.getXVelocity()*-1);
+            CarVariables.setV_xC(CarVariables.getV_xC()*-1);
           }
         }
+        CarVariables.setRollingContact();
         timeLine.play();
       }
       else
@@ -212,7 +217,7 @@ public class Dashboard extends VBox
     reset.setOnAction((event) ->
     {
       stop.fire();
-      Car.resetVariables();
+      CarVariables.resetVariables();
       updateLabels();
     });
     Button brake = new Button("Brake");
@@ -220,20 +225,19 @@ public class Dashboard extends VBox
     {
       if(timeLine.getStatus() == Animation.Status.RUNNING)
       {
-        Car.engageBrakes();
-        Car.stopping_distance = 0;
+        ebs.engageBrakes();
       }
     });
     simulationControl.getChildren().addAll(start,stop,reset,brake);
     simulationControl.setAlignment(Pos.CENTER);
-    getChildren().addAll(speedDisplay,accelerationDisplay,stopDistanceDisplay,speed,acceleration,gear,simulationControl);
+    getChildren().addAll(speedDisplay,accelerationDisplay,speed,acceleration,gear,simulationControl);
   }
 
   public void updateLabels()
   {
-    accelerationDisplay.setText("Current Acceleration: "+Math.round(100*Car.getCurrentXCAcceleration())/100.0+" m/s^2");
-    speedDisplay.setText("Current Speed: "+ Math.round(100*Car.getXVelocity())/100.0+" m/s");
-    stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*Car.stopping_distance)/100.0+" m");
+    //accelerationDisplay.setText("Current Acceleration: "+Math.round(100*Car.getCurrentXCAcceleration())/100.0+" m/s^2");
+    speedDisplay.setText("Current Speed: "+ Math.round(100*CarVariables.getV_xC())/100.0+" m/s");
+    //stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*Car.stopping_distance)/100.0+" m");
 
   }
 

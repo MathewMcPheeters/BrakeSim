@@ -1,3 +1,5 @@
+import Car.CarVariables;
+
 /**
  * James Perry
  * CS 460
@@ -16,17 +18,17 @@ public class EBS
 
   public void disengageBrakes()
   {
-    Car.setBrakeTorque(0);
+    CarVariables.setBrakeTorque(0);
   }
 
   public void engageBrakes()
   {
-    Car.measureStop = true;
+    //Car.measureStop = true;
     if (!braking)
     {
       braking = true;
-      double currentVelocity = Car.getXVelocity();
-      double absVelocity = Math.abs(Car.getXVelocity());
+      double currentVelocity = CarVariables.getV_xC();
+      double absVelocity = Math.abs(CarVariables.getV_xC());
       if (absVelocity <= 10)
       {
         pressure = 5000.;
@@ -63,7 +65,7 @@ public class EBS
       {
         pressure *= -1;
       }
-      Car.setBrakeTorque(pressure);
+      CarVariables.setBrakeTorque(pressure);
       braking = false;
     }
   }
