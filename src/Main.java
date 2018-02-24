@@ -1,6 +1,7 @@
 import Car.CarPhysics;
 import VirtualDevices.BrakeButton;
 import VirtualDevices.BrakeController;
+import VirtualDevices.ECU;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -41,7 +42,8 @@ public class Main extends Application
     CarPhysics carPhysics = new CarPhysics();
     BrakeButton brakeButton = new BrakeButton();
     BrakeController brakeController = new BrakeController();
-    ebs = new EBS(brakeButton,brakeController);
+    ECU ecu = new ECU();
+    ebs = new EBS(brakeButton,brakeController,ecu);
 
     this.dashboard = new Dashboard(10,timeline, ebs, carPhysics,brakeButton,brakeController);
     dashboard.setAlignment(Pos.CENTER);

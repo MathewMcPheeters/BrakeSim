@@ -1,6 +1,7 @@
 import Car.CarVariables;
 import VirtualDevices.BrakeButton;
 import VirtualDevices.BrakeController;
+import VirtualDevices.ECU;
 
 /**
  * James Perry
@@ -19,11 +20,13 @@ public class EBS
   private Double pressure = 0.0;
   private BrakeButton brakeButton;
   private BrakeController brakeController;
+  private ECU ecu;
 
-  public EBS(BrakeButton brakeButton, BrakeController brakeController)
+  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu)
   {
     this.brakeButton = brakeButton;
     this.brakeController = brakeController;
+    this.ecu = ecu;
   }
 
   public void update()
@@ -33,7 +36,7 @@ public class EBS
       if(!braking)
       {
         braking = true;
-        double absVelocity = Math.abs(CarVariables.getV_xC());
+        double absVelocity = Math.abs(ecu.getSpeed());
         if (absVelocity <= 10)
         {
           pressure = 5000.;
