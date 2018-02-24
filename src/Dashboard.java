@@ -1,5 +1,6 @@
 import Car.CarPhysics;
 import Car.CarVariables;
+import VirtualDevices.BrakeController;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
@@ -23,7 +24,8 @@ public class Dashboard extends VBox
   private EBS ebs;
   private CarPhysics carPhysics;
 
-  public Dashboard(int spacing, Timeline timeLine, EBS ebs, CarPhysics carPhysics, BrakeButton brakeButton)
+  public Dashboard(int spacing, Timeline timeLine, EBS ebs, CarPhysics carPhysics, BrakeButton brakeButton,
+                   BrakeController brakeController)
   {
     super(spacing);
 
@@ -207,6 +209,7 @@ public class Dashboard extends VBox
         }
         CarVariables.setRollingContact();
         brakeButton.setPosition(BrakeButton.Position.UP);
+        brakeController.setBrakePressure(0);
         timeLine.play();
       }
       else

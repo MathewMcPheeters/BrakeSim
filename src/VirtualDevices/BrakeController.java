@@ -1,10 +1,15 @@
 package VirtualDevices;
 
+import Car.CarVariables;
+
 public class BrakeController
 {
-  private double brakePressure = 0;
   public void setBrakePressure(double pressure)
   {
-    this.brakePressure = pressure;
+    CarVariables.setBrakeTorque(pressure);
+  }
+  public double getBrakePressure()
+  {
+    return CarVariables.getBrakeTorque();
   }
 }

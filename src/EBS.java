@@ -1,5 +1,6 @@
 import Car.CarVariables;
 import VirtualDevices.BrakeButton;
+import VirtualDevices.BrakeController;
 
 /**
  * James Perry
@@ -17,10 +18,12 @@ public class EBS
   private boolean braking = false;
   private Double pressure = 0.0;
   private BrakeButton brakeButton;
+  private BrakeController brakeController;
 
-  public EBS(BrakeButton brakeButton)
+  public EBS(BrakeButton brakeButton, BrakeController brakeController)
   {
     this.brakeButton = brakeButton;
+    this.brakeController = brakeController;
   }
 
   public void update()
@@ -63,7 +66,7 @@ public class EBS
         {
           pressure = 44000.;
         }
-        CarVariables.setBrakeTorque(pressure);
+        brakeController.setBrakePressure(pressure);
         braking = false;
         brakeButton.setPosition(BrakeButton.Position.UP);
       }
