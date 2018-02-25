@@ -1,4 +1,4 @@
-import Car.CarVariables;
+import VirtualDevices.AudioSystem;
 import VirtualDevices.BrakeButton;
 import VirtualDevices.BrakeController;
 import VirtualDevices.ECU;
@@ -9,24 +9,22 @@ import VirtualDevices.ECU;
  * This class contains the Emergency Braking System logic. It runs on it's own
  * thread, and gets signalled to engage the braking mechanism by Dashboard.java
  *
- * /Update every 60th of a second.
- * /Transmission,speed,brake controller,light,
- * /Team two is doing the review.
- * /Team 8- sleep schedule, pick up code when it is done
  */
 public class EBS
 {
   private boolean braking = false;
   private Double pressure = 0.0;
+  private AudioSystem audioSystem;
   private BrakeButton brakeButton;
   private BrakeController brakeController;
   private ECU ecu;
 
-  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu)
+  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu, AudioSystem audioSystem)
   {
     this.brakeButton = brakeButton;
     this.brakeController = brakeController;
     this.ecu = ecu;
+    this.audioSystem = audioSystem;
   }
 
   public void update()

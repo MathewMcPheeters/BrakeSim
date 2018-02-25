@@ -1,4 +1,5 @@
 import Car.CarPhysics;
+import VirtualDevices.AudioSystem;
 import VirtualDevices.BrakeButton;
 import VirtualDevices.BrakeController;
 import VirtualDevices.ECU;
@@ -38,12 +39,12 @@ public class Main extends Application
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
 
-
+    AudioSystem audioSystem = new AudioSystem();
     CarPhysics carPhysics = new CarPhysics();
     BrakeButton brakeButton = new BrakeButton();
     BrakeController brakeController = new BrakeController();
     ECU ecu = new ECU();
-    ebs = new EBS(brakeButton,brakeController,ecu);
+    ebs = new EBS(brakeButton,brakeController,ecu,audioSystem);
 
     this.dashboard = new Dashboard(10,timeline, ebs, carPhysics,brakeButton,brakeController);
     dashboard.setAlignment(Pos.CENTER);
