@@ -1,15 +1,16 @@
 package VirtualDevices;
 
+import Car.CarConstants;
 import Car.CarVariables;
 
 public class BrakeController
 {
-  public void setBrakePressure(double pressure)
+  public void applyForce(double pressure)
   {
     CarVariables.setBrakeTorque(pressure);
   }
-  public double getBrakePressure()
+  public double currentForceApplied()
   {
-    return CarVariables.getBrakeTorque();
+    return CarVariables.getBrakeTorque()/ CarConstants.getMaxBrakeForce();
   }
 }

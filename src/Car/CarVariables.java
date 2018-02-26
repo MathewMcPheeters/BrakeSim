@@ -29,6 +29,7 @@ public class CarVariables
     // Bookkeeping variables
     private static double stopDistance = 0.0;
 
+
     // Setters
     public static void setGear(Gear newGear){
         gear = newGear;

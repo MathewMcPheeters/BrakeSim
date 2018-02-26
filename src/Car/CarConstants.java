@@ -20,9 +20,12 @@ public class CarConstants
   final static double mu = 0.7; // coefficient of friction between wheels and ground (unitless)
   final static double f_max = 500; // maximum static friction (N)
   final static double g = 9.81; // gravity (m/s^2)
-
+  final static double maxSpeed = 300;
+  final static double maxBrakeForce = 10000;
   // Getters
   public static double getR(){
     return R;
   }
+  public static double getMaxSpeed(){return maxSpeed;}
+  public static double getMaxBrakeForce(){return maxBrakeForce;}
 }

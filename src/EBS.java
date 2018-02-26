@@ -34,7 +34,7 @@ public class EBS
       if(!braking)
       {
         braking = true;
-        double absVelocity = Math.abs(ecu.getSpeed());
+        double absVelocity = Math.abs(ecu.getCurrentSpeed());
         if (absVelocity <= 10)
         {
           pressure = 5000.;
@@ -67,7 +67,7 @@ public class EBS
         {
           pressure = 44000.;
         }
-        brakeController.setBrakePressure(pressure);
+        brakeController.applyForce(pressure);
         braking = false;
         brakeButton.setPosition(BrakeButton.Position.UP);
       }

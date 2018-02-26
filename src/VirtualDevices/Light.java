@@ -2,14 +2,15 @@ package VirtualDevices;
 
 public class Light
 {
-  public enum State
+  public enum Color
   {
-    ON,
-    OFF
+    RED,
+    ORANGE,
+    BLUE
   };
-  private State state;
-  public void setState(State state)
+  private Color color;
+  public void setState(Color color)
   {
-    this.state = state;
+    this.color = color;
   }
 }
