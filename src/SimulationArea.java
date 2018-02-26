@@ -48,8 +48,7 @@ public class SimulationArea extends Pane
       double distanceTraveled = (CarVariables.getV_xC() * 16) / 1000;
 
       dashes.get(i).setX((dashes.get(i).getX() - distanceTraveled * m_to_px));
-
-      if (dashes.get(i).getX() < 0) {
+      if (dashes.get(i).getX() < -3.048*m_to_px) {
 
         //Get the index of the dash usually adjacent to the left of this dash
         previousDash = i-1;
@@ -60,6 +59,10 @@ public class SimulationArea extends Pane
 
         //Move this dash a fixed distance to the right of the dash it always follows.
         dashes.get(i).setX(dashes.get(previousDash).getX()+9.15*m_to_px);
+      }
+      else if (dashes.get(i).getX() > 600+3.048*m_to_px)
+      {
+        dashes.get(i).setX(-3.048*m_to_px);
       }
     }
   }
