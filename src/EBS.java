@@ -2,13 +2,10 @@ import VirtualDevices.AudioSystem;
 import VirtualDevices.BrakeButton;
 import VirtualDevices.BrakeController;
 import VirtualDevices.ECU;
-
 /**
  * James Perry
  * CS 460
- * This class contains the Emergency Braking System logic. It runs on it's own
- * thread, and gets signalled to engage the braking mechanism by Dashboard.java
- *
+ * This class contains a simple Emergency Braking System.
  */
 public class EBS
 {
