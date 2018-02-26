@@ -7,11 +7,13 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 /**
@@ -58,6 +60,15 @@ public class Main extends Application
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
+
+    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+    {
+      @Override
+      public void handle(WindowEvent event)
+      {
+        if(timeline.getStatus() == Animation.Status.RUNNING) timeline.stop();
+      }
+    });
   }
 
   public void update()
