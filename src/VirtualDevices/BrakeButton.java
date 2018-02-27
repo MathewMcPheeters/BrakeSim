@@ -1,4 +1,8 @@
 package VirtualDevices;
+
+import PhysicalDrivers.BrakeButtonDriver;
+import PhysicalDrivers.BrakeButtonDriver.Position;
+
 /**
  * James Perry
  * CS 460
@@ -8,19 +12,20 @@ package VirtualDevices;
  */
 public class BrakeButton
 {
-  private Position position = Position.UP;
+  public BrakeButtonDriver brakeButtonDriver;
+
+  public BrakeButton(BrakeButtonDriver brakeButtonDriver)
+  {
+    this.brakeButtonDriver = brakeButtonDriver;
+  }
+
   public void setPosition(Position position)
   {
-    this.position = position;
+    brakeButtonDriver.setPosition(position);
   }
-
   public Position getPosition()
   {
-    return position;
+    return brakeButtonDriver.getPosition();
   }
 
-  public enum Position
-  {
-    UP, DOWN
-  }
 }

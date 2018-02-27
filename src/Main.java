@@ -1,8 +1,6 @@
 import Car.CarPhysics;
-import VirtualDevices.AudioSystem;
-import VirtualDevices.BrakeButton;
-import VirtualDevices.BrakeController;
-import VirtualDevices.ECU;
+import PhysicalDrivers.*;
+import VirtualDevices.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,18 +33,29 @@ public class Main extends Application
   @Override
   public void start(Stage stage)
   {
+    // Initiate physical drivers:
+    AudioSystemDriver audioSystemDriver = new AudioSystemDriver();
+    BrakeButtonDriver brakeButtonDriver = new BrakeButtonDriver();
+    BrakeControllerDriver brakeControllerDriver = new BrakeControllerDriver();
+    ECUDriver ecuDriver = new ECUDriver();
+    LEDDriver ledDriver = new LEDDriver();
+
+    // Initiate virtual drivers, passing them references to the physical drivers:
+    AudioSystem audioSystem = new AudioSystem(audioSystemDriver);
+    BrakeButton brakeButton = new BrakeButton(brakeButtonDriver);
+    BrakeController brakeController = new BrakeController(brakeControllerDriver);
+    ECU ecu = new ECU(ecuDriver);
+    LED led = new LED(ledDriver);
+
+    // Instantiate the EBS, passing it all the virtual drivers it needs:
+    ebs = new EBS(brakeButton,brakeController,ecu,audioSystem,led);
+
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
 
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16), ev -> update()));
     timeline.setCycleCount(Animation.INDEFINITE);
-
-    AudioSystem audioSystem = new AudioSystem();
     CarPhysics carPhysics = new CarPhysics();
-    BrakeButton brakeButton = new BrakeButton();
-    BrakeController brakeController = new BrakeController();
-    ECU ecu = new ECU();
-    ebs = new EBS(brakeButton,brakeController,ecu,audioSystem);
 
     this.dashboard = new Dashboard(10,timeline, ebs, carPhysics,brakeButton,brakeController);
     dashboard.setAlignment(Pos.CENTER);

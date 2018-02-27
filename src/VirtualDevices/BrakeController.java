@@ -1,7 +1,7 @@
 package VirtualDevices;
 
-import Car.CarConstants;
-import Car.CarVariables;
+import PhysicalDrivers.BrakeControllerDriver;
+
 /**
  * James Perry
  * CS 460
@@ -11,12 +11,19 @@ import Car.CarVariables;
  */
 public class BrakeController
 {
+  BrakeControllerDriver brakeControllerDriver;
+
+  public BrakeController(BrakeControllerDriver brakeControllerDriver)
+  {
+    this.brakeControllerDriver = brakeControllerDriver;
+  }
+
   public void applyForce(double pressure)
   {
-    CarVariables.setBrakeTorque(pressure);
+    brakeControllerDriver.applyForce(pressure);
   }
   public double currentForceApplied()
   {
-    return CarVariables.getBrakeTorque()/ CarConstants.getMaxBrakeForce();
+    return brakeControllerDriver.currentForceApplied();
   }
 }

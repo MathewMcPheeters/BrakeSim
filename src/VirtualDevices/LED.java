@@ -1,22 +1,24 @@
 package VirtualDevices;
+
+import PhysicalDrivers.LEDDriver;
+
 /**
  * James Perry
  * CS 460
  * This class contains the LED virtual device. It can be used to set the color
- * of the LED light on the Emergency Brake Button by calling setColor();
+ * of the LED light on the Emergency Brake Button by calling light();
  *
  */
 public class LED
 {
-  public enum Color
+  LEDDriver ledDriver;
+  public LED(LEDDriver ledDriver)
   {
-    RED,
-    ORANGE,
-    BLUE
-  };
-  private Color color;
-  public void light(Color color)
-  {
-    this.color = color;
+    this.ledDriver = ledDriver;
   }
+  public void light(LEDDriver.Color color)
+  {
+    ledDriver.light(color);
+  }
+
 }

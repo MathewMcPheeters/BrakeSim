@@ -1,5 +1,6 @@
 import Car.CarPhysics;
 import Car.CarVariables;
+import PhysicalDrivers.BrakeButtonDriver;
 import VirtualDevices.BrakeController;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
@@ -208,7 +209,7 @@ public class Dashboard extends VBox
           }
         }
         CarVariables.setRollingContact();
-        brakeButton.setPosition(BrakeButton.Position.UP);
+        brakeButton.setPosition(BrakeButtonDriver.Position.UP);
         brakeController.applyForce(0);
         timeLine.play();
       }
@@ -236,9 +237,9 @@ public class Dashboard extends VBox
       if(timeLine.getStatus() == Animation.Status.RUNNING)
       {
         //ebs.engageBrakes();
-        if(brakeButton.getPosition() == BrakeButton.Position.UP)
+        if(brakeButton.getPosition() == BrakeButtonDriver.Position.UP)
         {
-          brakeButton.setPosition(BrakeButton.Position.DOWN);
+          brakeButton.setPosition(BrakeButtonDriver.Position.DOWN);
         }
       }
     });

@@ -1,23 +1,25 @@
 package VirtualDevices;
 
-import Car.CarConstants;
-import Car.CarVariables;
-import Car.Gear;
+import PhysicalDrivers.ECUDriver;
 
 public class ECU
 {
+  private ECUDriver ecuDriver;
+  public ECU(ECUDriver ecuDriver)
+  {
+    this.ecuDriver = ecuDriver;
+  }
+
   public double getCurrentSpeed()
   {
-    return CarVariables.getV_xC();
+    return ecuDriver.getCurrentSpeed();
   }
   public double getMaxSpeed()
   {
-    return CarConstants.getMaxSpeed();
+    return ecuDriver.getMaxSpeed();
   }
-
   public boolean isGearInPark()
   {
-    if(CarVariables.getGear() == Gear.PARK) return true;
-    else return false;
+    return ecuDriver.isGearInPark();
   }
 }

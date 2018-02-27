@@ -1,7 +1,6 @@
-import VirtualDevices.AudioSystem;
-import VirtualDevices.BrakeButton;
-import VirtualDevices.BrakeController;
-import VirtualDevices.ECU;
+import PhysicalDrivers.BrakeButtonDriver;
+import VirtualDevices.*;
+
 /**
  * James Perry
  * CS 460
@@ -11,22 +10,26 @@ public class EBS
 {
   private boolean braking = false;
   private Double pressure = 0.0;
+
+  // Virtual drivers:
   private AudioSystem audioSystem;
   private BrakeButton brakeButton;
   private BrakeController brakeController;
   private ECU ecu;
+  private LED led;
 
-  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu, AudioSystem audioSystem)
+  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu, AudioSystem audioSystem, LED led)
   {
     this.brakeButton = brakeButton;
     this.brakeController = brakeController;
     this.ecu = ecu;
     this.audioSystem = audioSystem;
+    this.led = led;
   }
 
   public void update()
   {
-    if(brakeButton.getPosition() == BrakeButton.Position.DOWN)
+    if(brakeButton.getPosition() == BrakeButtonDriver.Position.DOWN)
     {
       if(!braking)
       {
@@ -66,7 +69,7 @@ public class EBS
         }
         brakeController.applyForce(pressure);
         braking = false;
-        brakeButton.setPosition(BrakeButton.Position.UP);
+        brakeButton.setPosition(BrakeButtonDriver.Position.UP);
       }
     }
   }
