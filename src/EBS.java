@@ -12,19 +12,20 @@ public class EBS
   private Double pressure = 0.0;
 
   // Virtual drivers:
-  private AudioSystem audioSystem;
+  private AlarmNotification alarmNotification;
   private BrakeButton brakeButton;
   private BrakeController brakeController;
-  private ECU ecu;
-  private LED led;
+  private VehicleElectronics vehicleElectronics;
+  private LEDNotification ledNotification;
 
-  public EBS(BrakeButton brakeButton, BrakeController brakeController, ECU ecu, AudioSystem audioSystem, LED led)
+  public EBS(BrakeButton brakeButton, BrakeController brakeController, VehicleElectronics vehicleElectronics,
+             AlarmNotification alarmNotification, LEDNotification ledNotification)
   {
     this.brakeButton = brakeButton;
     this.brakeController = brakeController;
-    this.ecu = ecu;
-    this.audioSystem = audioSystem;
-    this.led = led;
+    this.vehicleElectronics = vehicleElectronics;
+    this.alarmNotification = alarmNotification;
+    this.ledNotification = ledNotification;
   }
 
   public void update()
@@ -34,7 +35,7 @@ public class EBS
       if(!braking)
       {
         braking = true;
-        double absVelocity = Math.abs(ecu.getCurrentSpeed());
+        double absVelocity = Math.abs(vehicleElectronics.getCurrentSpeed());
         if (absVelocity <= 10)
         {
           pressure = 5000.;

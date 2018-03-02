@@ -12,6 +12,11 @@ import PhysicalDrivers.BrakeControllerDriver;
 public class BrakeController
 {
   BrakeControllerDriver brakeControllerDriver;
+  public enum BrakeStatus
+  {
+    FULLY_ENGAGED, NOT_FULLY_ENGAGED, DISENGAGED
+  }
+  private BrakeStatus brakeStatus;
 
   public BrakeController(BrakeControllerDriver brakeControllerDriver)
   {
@@ -22,8 +27,5 @@ public class BrakeController
   {
     brakeControllerDriver.applyForce(pressure);
   }
-  public double currentForceApplied()
-  {
-    return brakeControllerDriver.currentForceApplied();
-  }
+
 }

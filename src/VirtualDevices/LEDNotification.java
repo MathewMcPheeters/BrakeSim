@@ -1,6 +1,6 @@
 package VirtualDevices;
 
-import PhysicalDrivers.LEDDriver;
+import PhysicalDrivers.LEDNotificationDriver;
 
 /**
  * James Perry
@@ -9,14 +9,14 @@ import PhysicalDrivers.LEDDriver;
  * of the LED light on the Emergency Brake Button by calling light();
  *
  */
-public class LED
+public class LEDNotification
 {
-  LEDDriver ledDriver;
-  public LED(LEDDriver ledDriver)
+  LEDNotificationDriver ledDriver;
+  public LEDNotification(LEDNotificationDriver ledDriver)
   {
     this.ledDriver = ledDriver;
   }
-  public void light(LEDDriver.Color color)
+  public void light(LEDNotificationDriver.Color color)
   {
     ledDriver.light(color);
   }

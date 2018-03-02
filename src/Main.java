@@ -34,21 +34,21 @@ public class Main extends Application
   public void start(Stage stage)
   {
     // Initiate physical drivers:
-    AudioSystemDriver audioSystemDriver = new AudioSystemDriver();
+    AlarmNotificationDriver alarmNotificationDriver = new AlarmNotificationDriver();
     BrakeButtonDriver brakeButtonDriver = new BrakeButtonDriver();
     BrakeControllerDriver brakeControllerDriver = new BrakeControllerDriver();
-    ECUDriver ecuDriver = new ECUDriver();
-    LEDDriver ledDriver = new LEDDriver();
+    VehicleElectronicsDriver vehicleElectronicsDriver = new VehicleElectronicsDriver();
+    LEDNotificationDriver ledNotificationDriver = new LEDNotificationDriver();
 
     // Initiate virtual drivers, passing them references to the physical drivers:
-    AudioSystem audioSystem = new AudioSystem(audioSystemDriver);
+    AlarmNotification audioSystem = new AlarmNotification(alarmNotificationDriver);
     BrakeButton brakeButton = new BrakeButton(brakeButtonDriver);
     BrakeController brakeController = new BrakeController(brakeControllerDriver);
-    ECU ecu = new ECU(ecuDriver);
-    LED led = new LED(ledDriver);
+    VehicleElectronics vehicleElectronics = new VehicleElectronics(vehicleElectronicsDriver);
+    LEDNotification ledNotification = new LEDNotification(ledNotificationDriver);
 
     // Instantiate the EBS, passing it all the virtual drivers it needs:
-    ebs = new EBS(brakeButton,brakeController,ecu,audioSystem,led);
+    ebs = new EBS(brakeButton,brakeController,vehicleElectronics,audioSystem,ledNotification);
 
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
