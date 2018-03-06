@@ -23,7 +23,7 @@ public class EBS
     private LEDNotification ledNotification;
 
     /*
-     * Brake system constants
+     * Brake system state variables
      */
     private Gear gear;
     private double speed; // in meters / second
@@ -31,6 +31,7 @@ public class EBS
     private BrakeController.BrakeStatus state;
 
     /*
+     * Local variable holding audio clip to send to audio system
      * citation for URL code
      * http://www.java2s.com/Code/Java/JavaFX/wavfileplayer.htm
      */
@@ -50,7 +51,7 @@ public class EBS
         this.alarmNotification = alarmNotification;
         this.ledNotification = ledNotification;
 
-        this.initialize();
+        this.initialize(); //run a self test to assure functionality of system
     }
 
     /**
@@ -80,6 +81,11 @@ public class EBS
 
 
     }
+
+    /**
+     * Update the internal state varables by asking each external interface
+     * for an updated value
+     */
     private void updateVariables()
     {
         gear = vehicleElectronics.getGear();
@@ -110,12 +116,12 @@ public class EBS
             /* parking brake or emergency brake */
             else if( state == BrakeController.BrakeStatus.DISENGAGED )
             {
-                if( gear == Gear.PARK )
+                if( gear == Gear.PARK ) //parking brake mode
                 {
                     brakeController.applyForce(1.0);
                     ledNotification.light( LEDNotificationDriver.Color.RED );
                 }
-                else
+                else // emergency brake mode
                 {
 
                 }
@@ -124,6 +130,8 @@ public class EBS
             {
                 System.out.println("ERROR: This shouldn't happen in EBS");
             }
+
+            // when a down button is detected, reset the button position to up
             brakeButton.setPosition( BrakeButtonDriver.Position.UP);
         }
     }

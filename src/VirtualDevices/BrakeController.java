@@ -24,6 +24,13 @@ public class BrakeController
     brakeStatus = BrakeStatus.DISENGAGED;
   }
 
+  /**
+   * Original code by Team 07
+   * Updated by Mat M., Team 09
+   * @param pressure double value indicating the brake pressure to be applied
+   * Modifications: Brake Controller now updates the brakeStatus variable based
+   *                 on the brake force being applied
+   */
   public void applyForce(double pressure)
   {
     brakeControllerDriver.applyForce(pressure);
@@ -32,7 +39,14 @@ public class BrakeController
     if( force == 1.0)
     {
       this.brakeStatus = BrakeStatus.FULLY_ENGAGED;
-      System.out.println("Brake Controller state change: FULLY_ENGAGED");
+    }
+    else if( force == 0.0)
+    {
+      this.brakeStatus = BrakeStatus.DISENGAGED;
+    }
+    else
+    {
+      this.brakeStatus = BrakeStatus.NOT_FULLY_ENGAGED;
     }
   }
 
