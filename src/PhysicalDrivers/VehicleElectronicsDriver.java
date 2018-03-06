@@ -9,5 +9,8 @@ public class VehicleElectronicsDriver
     {
         return CarVariables.getV_xC();
     }
-    public Gear getGear(){return CarVariables.getGear();}
+    public Gear getGear()
+    {
+        return CarVariables.getGear();
+    }
 }

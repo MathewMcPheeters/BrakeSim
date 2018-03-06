@@ -6,6 +6,7 @@
  *         EBS walks through functionality in POST then interacts with
  *         the environment.
  ******************************************************************************/
+import Car.Gear;
 import PhysicalDrivers.BrakeButtonDriver;
 import PhysicalDrivers.LEDNotificationDriver;
 import VirtualDevices.*;
@@ -20,6 +21,14 @@ public class EBS
     private BrakeController brakeController;
     private VehicleElectronics vehicleElectronics;
     private LEDNotification ledNotification;
+
+    /*
+     * Brake system constants
+     */
+    private Gear gear;
+    private double speed; // in meters / second
+    private BrakeButtonDriver.Position pos;
+    private BrakeController.BrakeStatus state;
 
     /*
      * citation for URL code
@@ -40,6 +49,8 @@ public class EBS
         this.vehicleElectronics = vehicleElectronics;
         this.alarmNotification = alarmNotification;
         this.ledNotification = ledNotification;
+
+        this.initialize();
     }
 
     /**
@@ -55,13 +66,65 @@ public class EBS
 
         //change LED colors
         System.out.println("Changing colors of LED indicator to assure it works...");
-        ledNotification.light( LEDNotificationDriver.Color.RED);
-        ledNotification.light( LEDNotificationDriver.Color.ORANGE);
-        ledNotification.light( LEDNotificationDriver.Color.BLUE);
+        ledNotification.light( LEDNotificationDriver.Color.RED );
+        ledNotification.light( LEDNotificationDriver.Color.ORANGE );
+        ledNotification.light( LEDNotificationDriver.Color.BLUE );
 
+        //check the gear
+        gear = vehicleElectronics.getGear();
+        System.out.print("Gear = " + gear + "\n");
+
+        //get the current speed
+        speed = vehicleElectronics.getCurrentSpeed();
+        System.out.print("Speed = "+ speed + "\n");
+
+
+    }
+    private void updateVariables()
+    {
+        gear = vehicleElectronics.getGear();
+        speed = vehicleElectronics.getCurrentSpeed();
+        pos = brakeButton.getPosition();
+        state = brakeController.getBrakeStatus();
     }
     public void update()
     {
-        this.initialize();
+        this.updateVariables();
+
+        if( pos == BrakeButtonDriver.Position.DOWN )
+        {
+            /* release the brake */
+            if( state == BrakeController.BrakeStatus.FULLY_ENGAGED )
+            {
+                brakeController.applyForce(0.0);
+                ledNotification.light( LEDNotificationDriver.Color.BLUE );
+            }
+
+            else if( state == BrakeController.BrakeStatus.NOT_FULLY_ENGAGED )
+            {
+                while ( state != BrakeController.BrakeStatus.FULLY_ENGAGED )
+                {
+                    brakeController.applyForce( 0.5 );
+                }
+            }
+            /* parking brake or emergency brake */
+            else if( state == BrakeController.BrakeStatus.DISENGAGED )
+            {
+                if( gear == Gear.PARK )
+                {
+                    brakeController.applyForce(1.0);
+                    ledNotification.light( LEDNotificationDriver.Color.RED );
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                System.out.println("ERROR: This shouldn't happen in EBS");
+            }
+            brakeButton.setPosition( BrakeButtonDriver.Position.UP);
+        }
     }
 }

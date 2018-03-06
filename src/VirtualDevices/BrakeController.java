@@ -21,11 +21,23 @@ public class BrakeController
   public BrakeController(BrakeControllerDriver brakeControllerDriver)
   {
     this.brakeControllerDriver = brakeControllerDriver;
+    brakeStatus = BrakeStatus.DISENGAGED;
   }
 
   public void applyForce(double pressure)
   {
     brakeControllerDriver.applyForce(pressure);
+    double force = brakeControllerDriver.currentForceApplied();
+    force = force * 10000;
+    if( force == 1.0)
+    {
+      this.brakeStatus = BrakeStatus.FULLY_ENGAGED;
+      System.out.println("Brake Controller state change: FULLY_ENGAGED");
+    }
   }
 
+  public BrakeStatus getBrakeStatus()
+  {
+    return brakeStatus;
+  }
 }
