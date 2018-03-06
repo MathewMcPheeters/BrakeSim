@@ -2,7 +2,7 @@ package PhysicalDrivers;
 
 public class LEDNotificationDriver
 {
-  Color color;
+  public Color color;
 
   public void light(Color color)
   {

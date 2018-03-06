@@ -25,6 +25,7 @@ public class Main extends Application
   private Dashboard dashboard;
   private SimulationArea simulationArea;
   private EBS ebs;
+  private ButtonUI buttonUI;
 
   public static void main(String[] args)
   {
@@ -50,6 +51,8 @@ public class Main extends Application
     // Instantiate the EBS, passing it all the virtual drivers it needs:
     ebs = new EBS(brakeButton,brakeController,vehicleElectronics,audioSystem,ledNotification);
 
+    buttonUI = new ButtonUI( ledNotificationDriver );
+
     // Define the root & add GUI (Dashboard) and visualization (SimulationArea).
     BorderPane root = new BorderPane();
 
@@ -65,6 +68,7 @@ public class Main extends Application
     root.setPrefSize(window_width, window_height);
     root.setCenter(simulationArea);
     root.setLeft(dashboard);
+    root.setRight( buttonUI );
 
     Scene scene = new Scene(root);
     stage.setScene(scene);
@@ -85,6 +89,6 @@ public class Main extends Application
     simulationArea.update();
     ebs.update();
     dashboard.updateLabels();
-    //System.out.println("updating...");
+    buttonUI.update();
   }
 }

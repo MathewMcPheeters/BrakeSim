@@ -237,6 +237,7 @@ public class CarPhysics
   private double getTheta_Rpp(double theta_Cpp, boolean isRolling_R, boolean isRolling_F, long deltaTime)
   {
     double theta_Rpp;
+
     if(isRolling_R)
     {
       //System.out.println("X_Cpp = " + getX_Cpp(theta_Cpp,isRolling_R, isRolling_F));
