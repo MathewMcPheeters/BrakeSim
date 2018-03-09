@@ -106,8 +106,8 @@ public class Dashboard extends VBox
           if(acceleration>=0)
           {
             CarVariables.setAccelerationTorque(acceleration);
-            double currentThetaCpp = carPhysics.getTheta_Cpp(true, true, 16);
-            double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,true,true,16);
+            double currentThetaCpp = carPhysics.getTheta_Cpp(CarPhysics.WheelStatus.ROLLING, CarPhysics.WheelStatus.ROLLING, 16);
+            double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,CarPhysics.WheelStatus.ROLLING,CarPhysics.WheelStatus.ROLLING,16);
             CarVariables.setBrakeTorque(0.0); // Brake torque must be set to zero here because calling getX_Cpp can cause brakeTorque to be set to a nonzero value.
             accelerationDisplay.setText("Current Acceleration: "+Math.round(100*currentAcceleration)/100.0+" m/s^2");
           }
@@ -252,8 +252,8 @@ public class Dashboard extends VBox
   {
     speedDisplay.setText("Current Speed: "+ Math.round(100*CarVariables.getV_xC())/100.0+" m/s");
     stopDistanceDisplay.setText("Stopping Distance: " + Math.round(100*CarVariables.getStopDistance())/100.0+" m");
-    double currentThetaCpp = carPhysics.getTheta_Cpp(true, true, 16);
-    double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,true,true,16);
+    double currentThetaCpp = carPhysics.getTheta_Cpp(CarPhysics.WheelStatus.ROLLING, CarPhysics.WheelStatus.ROLLING, 16);
+    double currentAcceleration = carPhysics.getX_Cpp(currentThetaCpp,CarPhysics.WheelStatus.ROLLING,CarPhysics.WheelStatus.ROLLING,16);
     accelerationDisplay.setText("Current Acceleration: "+ Math.round(100*currentAcceleration)/100.0+" m/s^2");
   }
 
